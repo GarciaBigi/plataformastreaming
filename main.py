@@ -2,6 +2,18 @@ import mysql.connector
 from utils.consultas import * 
 from utils.frames import *
 import tkinter as tk
+def verificacion(nuevoUsuario,nuevoContra):
+    try:
+        cursor=cnx.cursor()
+        insert_usuario(cursor,nuevoUsuario,nuevoContra)
+        cnx.commit()
+        frame=frame_ingreso(root,autenticacion)
+        mostrar_frame(frame)
+    except mysql.connector.Error as err:
+        cnx.rollback()
+        print(f"Error: {err}")
+    finally:
+        cursor.close()
 
 
 def obtener_perfiles(idUsuario):
@@ -17,6 +29,11 @@ def obtener_perfiles(idUsuario):
         finally:
             cursor.close()
 
+
+def creacion():
+    frame=frame_nuevacuenta(root,verificacion)
+    mostrar_frame(frame)
+
 def autenticacion(correo, contraseña):
     if cnx.is_connected():
         cursor=cnx.cursor()
@@ -26,6 +43,8 @@ def autenticacion(correo, contraseña):
             print(usuarios)
             if len(usuarios)==0:
                 print("No existe un usuario con ese correo")
+                frame = frame_ingreso(root, autenticacion,creacion, True)
+                mostrar_frame(frame)
             elif len(usuarios)==1:
                 if usuarios[0][2]==contraseña:
                     print("Correcto")

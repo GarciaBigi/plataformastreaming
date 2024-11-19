@@ -30,3 +30,11 @@ def con_perfiles(cursor, idUsuario):
     cursor.execute(consultaPerfiles,(idUsuario,))
     filaPer = cursor.fetchall()
     return filaPer
+
+def insert_usuario(cursor,correo,contrasena):
+    insertarUsuario= """
+    Insert into usuarios(mail,contrasena)
+    Values(%s,%s)
+    """
+    cursor.execute(insertarUsuario,(correo,contrasena))
+
