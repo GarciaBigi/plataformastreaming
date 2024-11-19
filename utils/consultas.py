@@ -14,7 +14,7 @@ def ins_intento(cursor, estado, id):
     d=datetime.now()
     fecha=d.strftime("%Y-%m-%d")
     hora=d.strftime("%H:%M:%S")
-    datos= [(fecha,hora,estado,id)]
+    datos= (fecha,hora,estado,id)
     insertarIntento= """
     Insert into intentos(fecha,hora,exitosa, id_usuario)
     Values(%s, %s, %s, %s);

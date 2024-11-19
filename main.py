@@ -15,8 +15,14 @@ def autenticacion(correo, contraseña):
             elif len(usuarios)==1:
                 if usuarios[0][2]==contraseña:
                     print("Correcto")
+                    ins_intento(cursor,True,usuarios[0][0])
+                    cnx.commit()
+                    frame = frame_perfiles(root)
+                    mostrar_frame(frame)
                 else:
                     print("Incorrecto")
+                    ins_intento(cursor,False,usuarios[0][0])
+                    cnx.commit()
         except mysql.connector.Error as err:
             cnx.rollback()
             print(f"Error: {err}")
@@ -56,6 +62,7 @@ print("Conectado:", cnx.is_connected())
 # Mostrar el frame inicial
 frame_ing = frame_ingreso(root, autenticacion)
 mostrar_frame(frame_ing)
+
 
 root.mainloop()
 cnx.close()
