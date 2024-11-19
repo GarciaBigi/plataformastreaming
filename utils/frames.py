@@ -65,4 +65,3 @@ def frame_nuevacuenta(root,verificar):
     boton.grid(row=6,column=3)
     
     return f
-

@@ -23,7 +23,7 @@ def ins_intento(cursor, estado, id):
 
 def con_perfiles(cursor, idUsuario):
     consultaPerfiles = """
-    select nombre
+    select nombre,id_perfil 
     from perfiles p, usuarios u 
     where u.id_usuario = p.id_usuario and u.id_usuario = %s;
     """

@@ -64,9 +64,6 @@ def autenticacion(correo, contraseña):
             cursor.close()
     
 
-
-
-
 def mostrar_frame(frame):
     """Cambia al frame dado."""
     global frameactual
