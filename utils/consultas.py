@@ -20,3 +20,13 @@ def ins_intento(cursor, estado, id):
     Values(%s, %s, %s, %s);
     """
     cursor.execute(insertarIntento,datos)
+
+def con_perfiles(cursor, idUsuario):
+    consultaPerfiles = """
+    select nombre
+    from perfiles p, usuarios u 
+    where u.id_usuario = p.id_usuario and u.id_usuario = %s;
+    """
+    cursor.execute(consultaPerfiles,(idUsuario,))
+    filaPer = cursor.fetchall()
+    return filaPer

@@ -3,6 +3,20 @@ from utils.consultas import *
 from utils.frames import *
 import tkinter as tk
 
+
+def obtener_perfiles(idUsuario):
+    if cnx.is_connected:
+        cursor=cnx.cursor()
+        try:
+            listaPerfiles = con_perfiles(cursor, idUsuario)
+            print(listaPerfiles)
+            return listaPerfiles
+        except mysql.connector.Error as err:
+            cnx.rollback()
+            print(f"Error: {err}")
+        finally:
+            cursor.close()
+
 def autenticacion(correo, contraseña):
     if cnx.is_connected():
         cursor=cnx.cursor()
@@ -17,7 +31,8 @@ def autenticacion(correo, contraseña):
                     print("Correcto")
                     ins_intento(cursor,True,usuarios[0][0])
                     cnx.commit()
-                    frame = frame_perfiles(root)
+                    listaPer = obtener_perfiles(usuarios[0][0])
+                    frame = frame_perfiles(root,listaPer)
                     mostrar_frame(frame)
                 else:
                     print("Incorrecto")
@@ -29,6 +44,7 @@ def autenticacion(correo, contraseña):
         finally:
             cursor.close()
     
+
 
 
 
