@@ -2,66 +2,94 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
-def frame_ingreso(root,autenticacion,creacion=None,nuevacreacion=False):
-    f=Frame(root)
-    f.configure(bg = "#292F36")
-    bienvenida = Label(f, text="Bienvenido a esta plataforma, por favor ingrese su correo y contraseña", background = "#FFFFFF")
-    bienvenida.grid(row=1,column=1,padx=10)
 
-    correo = Text(f, height=2,width=30, background = "#FFFFFF")
-    correo.grid(row=4, column=1)
-
-    contraseña = Text(f, height=2,width=30, background="#FFFFFF")
-    contraseña.grid(row=6,column=1)
-
-    botonIngresar = Button(f, text="Ingresar", command= lambda: autenticacion(correo.get("1.0", "end-1c"), contraseña.get("1.0","end-1c")),background="#FFFFFF", relief="raised",borderwidth=4)
-    botonIngresar.grid(row=5, column=2)
-    if nuevacreacion:
-        botonNueva= Button(f, text="¿Quiere crear una nueva cuenta?", command=creacion ,background="#FFFFFF", relief="raised",borderwidth=4)
-        botonNueva.grid(row=4, column=2)
-    return f
-def frame_perfiles(root,listaPer):
-    f=Frame(root)
-    f.configure(bg = "#292F36")
-
-    bienvenidaPerfiles = Label(f,text="Bienvenido, seleccione un perfil", background="#493548")
-    bienvenidaPerfiles.grid(row=1,column=1,padx=10)
-
-    for i in range(len(listaPer)):
-        perfil = Label(f,text=f"{listaPer[i][0]}", background="#493548")
-        perfil.grid(row=i+1, column=2, padx=10)
-        Ingresar = Button(f,text="Ingresar", command= lambda : print("Ingresando"), background="#FFFFFF", relief="raised",borderwidth=4)
-        Ingresar.grid(row=i+1,column=4)
+def frame_ingreso(root, autenticacion, creacion=None, nuevacreacion=False):
+    f = Frame(root, bg="#FFFFFF", width=450, height=450)
+    f.grid_propagate(False)
     
-
+    Label(
+        f,
+        text="Bienvenido a esta plataforma.\nPor favor, ingrese su correo y contraseña.",
+        bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center"
+    ).grid(row=0, column=0, columnspan=2, pady=20, padx=10)
+    
+    Label(f, text="Correo electrónico:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=1, column=0, pady=10, sticky="e")
+    correo = Entry(f, width=30, bg="#F7F7F7", bd=1, relief="solid")
+    correo.grid(row=1, column=1, pady=10, padx=10)
+    
+    Label(f, text="Contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=2, column=0, pady=10, sticky="e")
+    contraseña = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
+    contraseña.grid(row=2, column=1, pady=10, padx=10)
+    
+    Button(
+        f, text="Ingresar", command=lambda: autenticacion(correo.get(), contraseña.get()),
+        bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15, height=1
+    ).grid(row=3, column=1, pady=20)
+    
+    if nuevacreacion:
+        Button(
+            f, text="¿Crear nueva cuenta?", command=creacion,
+            bg="#FFFFFF", fg="#4CAF50", font=("Arial", 10, "underline"), relief="flat"
+        ).grid(row=4, column=1, pady=10)
+    
     return f
 
-def frame_nuevacuenta(root,verificar):
-    f=Frame(root)
-    f.configure(bg = "#292F36")
 
-    cartel= Label(f, text="Creación de una nueva cuenta",background = "#FFFFFF")
-    cartel.grid(row=1, column=1)
+def frame_perfiles(root, listaPer):
+    f = Frame(root, bg="#FFFFFF", width=450, height=450)
+    f.grid_propagate(False)
+    
+    Label(
+        f, text="Bienvenido, seleccione un perfil.",
+        bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center"
+    ).pack(pady=20)
+    
+    canvas = Canvas(f, bg="#FFFFFF", highlightthickness=0, width=430, height=300)
+    scrollbar = Scrollbar(f, orient="vertical", command=canvas.yview)
+    profiles_frame = Frame(canvas, bg="#FFFFFF")
+    
+    for i, perfil in enumerate(listaPer):
+        Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
+        Button(
+            profiles_frame, text="Ingresar", command=lambda: print("Ingresando"),
+            bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10), relief="flat", width=10
+        ).grid(row=i, column=1, padx=10, pady=5)
+    
+    profiles_frame.update_idletasks()
+    canvas.create_window(0, 0, anchor="nw", window=profiles_frame)
+    canvas.update_idletasks()
+    canvas.configure(yscrollcommand=scrollbar.set, scrollregion=canvas.bbox("all"))
+    
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+    
+    return f
 
-    cartel2= Label(f, text="Ingrese nuevo mail",background = "#FFFFFF")
-    cartel2.grid(row=3, column=1)
 
-    nuevoUsuario= Text(f, height=2,width=30, background="#FFFFFF")
-    nuevoUsuario.grid(row=3, column=2)
-
-    cartel3= Label(f, text="Ingrese nueva contraseña",background = "#FFFFFF")
-    cartel3.grid(row=4,column=1)
-
-    nuevaContra1= Text(f, height=2,width=30, background="#FFFFFF")
-    nuevaContra1.grid(row=4, column=2)
-
-    cartel4= Label(f, text="Repita nueva contraseña",background = "#FFFFFF")
-    cartel4.grid(row=5,column=1)
-
-    nuevaContra2= Text(f, height=2,width=30, background="#FFFFFF")
-    nuevaContra2.grid(row=5, column=2)
-
-    boton=  Button(f, text="CREAR", command= lambda: verificar(nuevoUsuario.get("1.0","end-1c"),nuevaContra1.get("1.0", "end-1c")),background="#FFFFFF", relief="raised",borderwidth=4)
-    boton.grid(row=6,column=3)
+def frame_nuevacuenta(root, verificar):
+    f = Frame(root, bg="#FFFFFF", width=450, height=450)
+    f.grid_propagate(False)
+    
+    Label(
+        f, text="Creación de una nueva cuenta",
+        bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center"
+    ).grid(row=0, column=0, columnspan=2, pady=20, padx=10)
+    
+    Label(f, text="Ingrese nuevo correo:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=1, column=0, pady=10, sticky="e")
+    nuevoUsuario = Entry(f, width=30, bg="#F7F7F7", bd=1, relief="solid")
+    nuevoUsuario.grid(row=1, column=1, pady=10, padx=10)
+    
+    Label(f, text="Ingrese nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=2, column=0, pady=10, sticky="e")
+    nuevaContra1 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
+    nuevaContra1.grid(row=2, column=1, pady=10, padx=10)
+    
+    Label(f, text="Repita nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=3, column=0, pady=10, sticky="e")
+    nuevaContra2 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
+    nuevaContra2.grid(row=3, column=1, pady=10, padx=10)
+    
+    Button(
+        f, text="Crear Cuenta", command=lambda: verificar(nuevoUsuario.get(), nuevaContra1.get()),
+        bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15
+    ).grid(row=4, column=0, columnspan=2, pady=20)
     
     return f

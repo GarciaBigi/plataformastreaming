@@ -75,7 +75,7 @@ def mostrar_frame(frame):
 #Ventana principal
 root=tk.Tk()
 root.title("Plataforma Streaming")
-root.geometry("850x400")
+root.geometry("450x450")
 frameactual=None
 root.configure(bg = "#292F36")
 
