@@ -102,10 +102,11 @@ def frame_plataforma(root, listaContinuar, listaNovedades):
 
     # Título principal
     Label(f,text="Bienvenido a la plataforma",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).pack(pady=10)
-    #Buscador
     
+    #Buscador
     busqueda = Entry(f, width=30, bg="#F7F7F7", bd=1, relief="solid")
     busqueda.pack(pady=10)
+
     # Sección "Continuar viendo"
     Label(f,text="Continuar viendo",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).pack(pady=5)
 
