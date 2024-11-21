@@ -11,7 +11,7 @@ def frame_ingreso(root, autenticacion,*,creacion=None, cambiocontra=None, nuevac
     Label(f,text="Bienvenido a esta plataforma.\nPor favor, ingrese su correo y contraseña.",bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").grid(row=0, column=0, columnspan=2, pady=20, padx=10)
     
     Label(f, text="Correo electrónico:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=1, column=0, pady=10, sticky="e")
-    correo = Entry(f, width=30, bg="#F7F7F7", bd=1, relief="solid")
+    correo = Entry(f,width=30, bg="#F7F7F7", bd=1, relief="solid")
     correo.grid(row=1, column=1, pady=10, padx=10)
     
     Label(f, text="Contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=2, column=0, pady=10, sticky="e")
@@ -75,6 +75,7 @@ def frame_nuevacuenta(root, verificar):
     Button(f, text="Crear Cuenta", command=lambda: verificar(nuevoUsuario.get(), nuevaContra1.get()),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15).grid(row=4, column=0, columnspan=2, pady=20)
     
     return f
+
 def frame_nuevacontra(root, usuario, nuevacontra):
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
@@ -98,15 +99,58 @@ def frame_nuevacontra(root, usuario, nuevacontra):
 def frame_plataforma(root, listaContinuar, listaNovedades):
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
-    Label(f, text=f"Bienvenido: {listaContinuar[0][0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").grid(row=0, column=1, columnspan=2, pady=20, padx=10)
-    Label(f, text="Continuar viendo", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=200, justify="center").grid(row=1, column=0, pady=20, padx=10, sticky="n")
-    #for elem in listaContinuar:
-    #    Label(f, text=f"Titulo: {elem[1]}, Visto: {elem[2]}", bg= "#FFFFFF", fg= "#000000", font= ("Arial", 12, "bold"), wraplength=400, justify="center").grid(row=0, column=1, columnspan=2, pady=20, padx=10)
+
+    # Título principal
+    Label(f,text="Bienvenido a la plataforma",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).pack(pady=10)
+    #Buscador
     
-    Label(f, text="Novedades", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=200, justify="center").grid(row=1, column=2, pady=20, padx=10, sticky="n")
-    #for elem in listaNovedades:
-    #    Label(f,text= f"{elem[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=200, justify="center").grid(row=1, column=2, pady=20, padx=10, sticky="n")
+    busqueda = Entry(f, width=30, bg="#F7F7F7", bd=1, relief="solid")
+    busqueda.pack(pady=10)
+    # Sección "Continuar viendo"
+    Label(f,text="Continuar viendo",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).pack(pady=5)
+
+    frame_continuar = Frame(f, bg="#FFFFFF", width=450, height=100)
+    frame_continuar.pack(pady=5)
+    
+    canvas_continuar = Canvas(frame_continuar, bg="#FFFFFF", width=450, height=100, highlightthickness=0)
+    scrollbar_continuar = Scrollbar(frame_continuar, orient="horizontal", command=canvas_continuar.xview)
+    content_continuar = Frame(canvas_continuar, bg="#FFFFFF")
+
+    canvas_continuar.configure(xscrollcommand=scrollbar_continuar.set)
+    canvas_continuar.pack(side="top", fill="both", expand=True)
+    scrollbar_continuar.pack(side="bottom", fill="x")
+
+    canvas_continuar.create_window((0, 0), window=content_continuar, anchor="nw")
+
+    for elem in listaContinuar:
+        Label(content_continuar,text=f"Titulo: {elem[1]}, Visto: {elem[2]}",bg="#FFFFFF",fg="#000000",font=("Arial", 10),wraplength=200,justify="left",).pack(side="left", padx=10,pady=5)
+
+    content_continuar.update_idletasks()
+    canvas_continuar.configure(scrollregion=canvas_continuar.bbox("all"))
+
+    # Sección "Novedades"
+    Label(f,text="Novedades",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).pack(pady=5)
+
+    frame_novedades = Frame(f, bg="#FFFFFF", width=450, height=100)
+    frame_novedades.pack(pady=5)
+
+    canvas_novedades = Canvas(frame_novedades, bg="#FFFFFF", width=450, height=100, highlightthickness=0)
+    scrollbar_novedades = Scrollbar(frame_novedades, orient="horizontal", command=canvas_novedades.xview)
+    content_novedades = Frame(canvas_novedades, bg="#FFFFFF")
+
+    canvas_novedades.configure(xscrollcommand=scrollbar_novedades.set)
+    canvas_novedades.pack(side="top", fill="both", expand=True)
+    scrollbar_novedades.pack(side="bottom", fill="x")
+
+    canvas_novedades.create_window((0, 0), window=content_novedades, anchor="nw")
+
+    for elem in listaNovedades:
+        Label(content_novedades,text=f"{elem[0]}",bg="#FFFFFF",fg="#000000",font=("Arial", 10),wraplength=200,justify="left",).pack(side="left", padx=10,pady=5)
+
+    content_novedades.update_idletasks()
+    canvas_novedades.configure(scrollregion=canvas_novedades.bbox("all"))
 
     f.pack(fill="both", expand=True)
-    
     return f
+
+

@@ -107,7 +107,7 @@ def servicio(perfil):
 #Ventana principal
 root=tk.Tk()
 root.title("Plataforma Streaming")
-root.geometry("450x450")
+root.geometry("450x550")
 frameactual=None
 root.configure(bg = "#292F36")
 
