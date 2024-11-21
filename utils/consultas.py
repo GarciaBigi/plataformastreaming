@@ -35,17 +35,6 @@ def insert_usuario(cursor,correo,contrasena):
     Values(%s,%s)
     """
     cursor.execute(insertarUsuario,(correo,contrasena))
-
-#def con_id(cursor,correo):
- #   print(correo)
-  ## select u.id_usuario 
-    #from usuarios u 
-    #where u.mail = %s;
-    #"""
-    #cursor.execute(get_id,(correo,))
-    #id= cursor.fetchall()[0][0]
-
-
 def upd_contrasena(cursor,correo,contrasena):
     print(correo)
     get_id= """
@@ -62,3 +51,24 @@ def upd_contrasena(cursor,correo,contrasena):
     WHERE id_usuario = %s;
     """
     cursor.execute(upd_c,(contrasena,id))
+
+def continuar_viendo(cursor,idperfil):
+    consultaContinuar = """
+    select p.nombre , m2.titulo, m.porcentaje_visto 
+    from perfiles p , miro m , multimedias m2 
+    where p.id_perfil = m.id_perfil and m.id_multimedia = m2.id_multimedia and p.id_perfil = %s and m.porcentaje_visto < 100
+    limit 5
+    """
+    cursor.execute(consultaContinuar,(idperfil,))
+    filaContinuar = cursor.fetchall()
+    return filaContinuar
+def novedades(cursor):
+    consultaNovedades = """
+    select m.titulo 
+    from multimedias m 
+    order by m.fecha_agregacion desc
+    limit 5
+    """
+    cursor.execute(consultaNovedades)
+    listaNovedades = cursor.fetchall()
+    return listaNovedades

@@ -85,10 +85,22 @@ def obtener_perfiles(idUsuario):
             print(f"Error: {err}")
         finally:
             cursor.close()
+
 #PLATAFORMA STREAMING
 def servicio(perfil):
-    frame=frame_plataforma(root,perfil)
-    mostrar_frame(frame)
+    if cnx.is_connected():
+        cursor=cnx.cursor()
+        try: 
+            listaContinuar = continuar_viendo(cursor, perfil[1])
+            listaNovedades = novedades(cursor)
+            frame=frame_plataforma(root,listaContinuar,listaNovedades)
+            mostrar_frame(frame)
+        except mysql.connector.Error as err:
+            cnx.rollback()
+            print(f"Error: {err}")
+        finally:
+            cursor.close()
+
 
 #############COMIENZA CODIGO###########################################################################################
 
