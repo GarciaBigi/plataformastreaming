@@ -38,7 +38,7 @@ def frame_perfiles(root, listaPer,servicio):
     
     for i, perfil in enumerate(listaPer):
         Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
-        Button(profiles_frame, text="Ingresar", command=lambda p=perfil[0]: servicio(p),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10), relief="flat", width=10).grid(row=i, column=1, padx=10, pady=5)
+        Button(profiles_frame, text="Ingresar", command=lambda p=perfil: servicio(p),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10), relief="flat", width=10).grid(row=i, column=1, padx=10, pady=5)
     
     profiles_frame.update_idletasks()
     canvas.create_window(0, 0, anchor="nw", window=profiles_frame)
@@ -75,12 +75,17 @@ def frame_nuevacuenta(root, verificar):
     
     return f
 
-def frame_plataforma(root, perfil):
+def frame_plataforma(root, listaContinuar, listaNovedades):
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
-    Label(f, text=f"Bienvenido: {perfil}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").grid(row=0, column=1, columnspan=2, pady=20, padx=10)
+    Label(f, text=f"Bienvenido: {listaContinuar[0][0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").grid(row=0, column=1, columnspan=2, pady=20, padx=10)
     Label(f, text="Continuar viendo", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=200, justify="center").grid(row=1, column=0, pady=20, padx=10, sticky="n")
+    #for elem in listaContinuar:
+    #    Label(f, text=f"Titulo: {elem[1]}, Visto: {elem[2]}", bg= "#FFFFFF", fg= "#000000", font= ("Arial", 12, "bold"), wraplength=400, justify="center").grid(row=0, column=1, columnspan=2, pady=20, padx=10)
+    
     Label(f, text="Novedades", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=200, justify="center").grid(row=1, column=2, pady=20, padx=10, sticky="n")
+    #for elem in listaNovedades:
+    #    Label(f,text= f"{elem[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=200, justify="center").grid(row=1, column=2, pady=20, padx=10, sticky="n")
 
     f.pack(fill="both", expand=True)
     

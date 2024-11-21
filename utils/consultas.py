@@ -38,3 +38,24 @@ def insert_usuario(cursor,correo,contrasena):
     """
     cursor.execute(insertarUsuario,(correo,contrasena))
 
+def continuar_viendo(cursor,idperfil):
+    consultaContinuar = """
+    select p.nombre , m2.titulo, m.porcentaje_visto 
+    from perfiles p , miro m , multimedias m2 
+    where p.id_perfil = m.id_perfil and m.id_multimedia = m2.id_multimedia and p.id_perfil = %s and m.porcentaje_visto < 100
+    limit 5
+    """
+    cursor.execute(consultaContinuar,(idperfil,))
+    filaContinuar = cursor.fetchall()
+    return filaContinuar
+
+def novedades(cursor):
+    consultaNovedades = """
+    select m.titulo 
+    from multimedias m 
+    order by m.fecha_agregacion desc
+    limit 5
+    """
+    cursor.execute(consultaNovedades)
+    listaNovedades = cursor.fetchall()
+    return listaNovedades
