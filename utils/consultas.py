@@ -7,8 +7,6 @@ def con_usuarios(cursor, correo):
     """
     cursor.execute(consultaUsuario)
     filaUsuario = cursor.fetchall()
-    print(consultaUsuario)
-    print(repr(correo))
     return filaUsuario
 def ins_intento(cursor, estado, id):
     d=datetime.now()
@@ -38,3 +36,29 @@ def insert_usuario(cursor,correo,contrasena):
     """
     cursor.execute(insertarUsuario,(correo,contrasena))
 
+#def con_id(cursor,correo):
+ #   print(correo)
+  ## select u.id_usuario 
+    #from usuarios u 
+    #where u.mail = %s;
+    #"""
+    #cursor.execute(get_id,(correo,))
+    #id= cursor.fetchall()[0][0]
+
+
+def upd_contrasena(cursor,correo,contrasena):
+    print(correo)
+    get_id= """
+    select u.id_usuario 
+    from usuarios u 
+    where u.mail = %s;
+    """
+    cursor.execute(get_id,(correo,))
+    id= cursor.fetchall()[0][0]
+
+    upd_c="""
+    UPDATE usuarios 
+    SET contrasena = %s
+    WHERE id_usuario = %s;
+    """
+    cursor.execute(upd_c,(contrasena,id))

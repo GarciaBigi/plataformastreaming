@@ -4,7 +4,7 @@ from tkinter import ttk
 from tkinter import filedialog
 
 
-def frame_ingreso(root, autenticacion, creacion=None, nuevacreacion=False):
+def frame_ingreso(root, autenticacion,*,creacion=None, cambiocontra=None, nuevacreacion=False, nuevacontrasena=(False,"")):
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
     
@@ -22,7 +22,8 @@ def frame_ingreso(root, autenticacion, creacion=None, nuevacreacion=False):
     
     if nuevacreacion:
         Button(f, text="¿Crear nueva cuenta?", command=creacion,bg="#FFFFFF", fg="#4CAF50", font=("Arial", 10, "underline"), relief="flat").grid(row=4, column=1, pady=10)
-    
+    if nuevacontrasena[0]:
+        Button(f, text="¿Olvidaste la contraseña?", command=lambda: cambiocontra(nuevacontrasena[1]),bg="#FFFFFF", fg="#4CAF50", font=("Arial", 10, "underline"), relief="flat").grid(row=5, column=1, pady=10)
     return f
 
 
@@ -74,6 +75,27 @@ def frame_nuevacuenta(root, verificar):
     Button(f, text="Crear Cuenta", command=lambda: verificar(nuevoUsuario.get(), nuevaContra1.get()),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15).grid(row=4, column=0, columnspan=2, pady=20)
     
     return f
+
+def frame_nuevacontra(root, usuario, nuevacontra):
+    f = Frame(root, bg="#FFFFFF", width=450, height=450)
+    f.grid_propagate(False)
+
+    Label(f, text=f"Bienvenido: {usuario}",bg="#FFFFFF", fg="#000000", font=("Arial", 14, "bold"),wraplength=400, justify="center").grid(row=0, column=0, columnspan=2, pady=20, padx=10)
+    Label(f, text="Por favor, ingrese su nueva contraseña.",bg="#FFFFFF", fg="#555555", font=("Arial", 11),wraplength=400, justify="center").grid(row=1, column=0, columnspan=2, pady=10, padx=10)
+
+
+    Label(f, text="Nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=2, column=0, pady=10, sticky="e", padx=10)
+    nuevaContra1 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
+    nuevaContra1.grid(row=2, column=1, pady=10, padx=10)
+
+    Label(f, text="Repita nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=3, column=0, pady=10, sticky="e", padx=10)
+    nuevaContra2 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
+    nuevaContra2.grid(row=3, column=1, pady=10, padx=10)
+
+    Button(f, text="Confirmar", command=lambda: nuevacontra(usuario,nuevaContra1.get(),),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"),relief="flat", width=15, height=1).grid(row=4, column=0, columnspan=2, pady=20)
+
+    return f
+
 
 def frame_plataforma(root, perfil):
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
