@@ -51,7 +51,7 @@ def autenticacion(correo, contraseña):
                     ins_intento(cursor,True,usuarios[0][0])
                     cnx.commit()
                     listaPer = obtener_perfiles(usuarios[0][0])
-                    frame = frame_perfiles(root,listaPer)
+                    frame = frame_perfiles(root,listaPer,servicio)
                     mostrar_frame(frame)
                 else:
                     print("Incorrecto")
@@ -62,6 +62,9 @@ def autenticacion(correo, contraseña):
             print(f"Error: {err}")
         finally:
             cursor.close()
+def servicio(perfil):
+    frame=frame_plataforma(root,perfil)
+    mostrar_frame(frame)
     
 
 def mostrar_frame(frame):
