@@ -72,3 +72,4 @@ def novedades(cursor):
     cursor.execute(consultaNovedades)
     listaNovedades = cursor.fetchall()
     return listaNovedades
+
