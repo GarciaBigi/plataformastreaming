@@ -72,3 +72,24 @@ def novedades(cursor):
     cursor.execute(consultaNovedades)
     listaNovedades = cursor.fetchall()
     return listaNovedades
+
+def buscarTitulo(cursor, string):
+    consultaBuscar = """
+    select id_multimedia, titulo
+    from multimedias m 
+    where titulo like %s
+    """
+    string_aux = f"%{string}%"
+    cursor.execute(consultaBuscar, (string_aux,))
+    listaBuscar = cursor.fetchall()
+    return listaBuscar
+
+def buscarInfo(cursor, id):
+    consultaTitulo= """
+    select m.titulo ,m.valoracion , a.nombre ,a.apellido, ep.rol , m.duracion , m.plot , m.genero 
+    from multimedias m , artistas a , equipo_produccion ep
+    where m.id_multimedia = ep.id_multimedia  and ep.id_artista = a.id_artista and m.id_multimedia = %s
+    """
+    cursor.execute(consultaTitulo,(id,))
+    listaInfo = cursor.fetchall()
+    return listaInfo

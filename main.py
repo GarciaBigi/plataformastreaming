@@ -42,6 +42,7 @@ def autenticacion(correo, contraseña):
 def creacion():
     frame=frame_nuevacuenta(root,verificacion)
     mostrar_frame(frame)
+
 def verificacion(nuevoUsuario,nuevoContra):
     try:
         cursor=cnx.cursor()
@@ -93,8 +94,20 @@ def servicio(perfil):
         try: 
             listaContinuar = continuar_viendo(cursor, perfil[1])
             listaNovedades = novedades(cursor)
-            frame=frame_plataforma(root,listaContinuar,listaNovedades)
+            frame=frame_plataforma(root, listaContinuar,listaNovedades, busq=busq)
             mostrar_frame(frame)
+        except mysql.connector.Error as err:
+            cnx.rollback()
+            print(f"Error: {err}")
+        finally:
+            cursor.close()
+
+def busq(texto):
+    if cnx.is_connected:
+        cursor=cnx.cursor()
+        try:
+            listaBusqueda = buscarTitulo(cursor, texto)
+            return listaBusqueda
         except mysql.connector.Error as err:
             cnx.rollback()
             print(f"Error: {err}")

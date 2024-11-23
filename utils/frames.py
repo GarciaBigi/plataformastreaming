@@ -96,21 +96,53 @@ def frame_nuevacontra(root, usuario, nuevacontra):
 
     return f
 
-def frame_plataforma(root, listaContinuar, listaNovedades):
+def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = ""):
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
 
     # Título principal
-    Label(f,text="Bienvenido a la plataforma",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).pack(pady=10)
+    titulo = Label(f,text="Bienvenido a la plataforma",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",)
+    titulo.grid(row=0, column=0, columnspan=2, pady=10)
     #Buscador
-    
-    busqueda = Entry(f, width=30, bg="#F7F7F7", bd=1, relief="solid")
-    busqueda.pack(pady=10)
+
+    def callback(event):
+        seleccion = listaBus.curselection()
+        if seleccion:
+            indice = seleccion[0]
+            valor = listaBus.get(indice)
+            print(valor)
+
+    def obtener_resultados(texto):
+        listaBus.delete(0,END)
+        resultados = busq(texto)
+        for elem in resultados:
+            listaBus.insert(END, elem[1])
+        listaBus.bind('<<ListboxSelect>>', callback)
+        listaBus.config(height=min(len(resultados), 10))
+        
+
+    busqueda = Entry(f, width=40, bg="#F7F7F7", bd=1, relief="solid")
+    busqueda.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+
+    botonBuscar = Button(f, text= "Buscar", command= lambda: obtener_resultados(busqueda.get()), bg="#2A2D43", fg= "#000000" ,font=("Arial", 10),relief="flat", width=8)
+    botonBuscar.grid(row=1, column=1, padx=5, pady=10, sticky="e")
+
+    #listbox con scrollbar
+    frame_listbox = Frame(f,bg="#FFFFFF")
+    frame_listbox.grid(row=2, column=0, columnspan=2, padx=10, pady=5, sticky="nsew")
+
+    listaBus = Listbox(frame_listbox, width=40, height=10, bg="#F7F7F7", bd=1, relief="solid")
+    listaBus.pack(side="left", fill="both", expand=True)
+
+    scrollbarList = Scrollbar(frame_listbox, orient="vertical", command=listaBus.yview)
+    scrollbarList.pack(side="right", fill="y")
+    listaBus.config(yscrollcommand=scrollbarList.set)
+
     # Sección "Continuar viendo"
-    Label(f,text="Continuar viendo",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).pack(pady=5)
+    Label(f,text="Continuar viendo",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).grid(row=3, column=0, columnspan=2, pady=5)
 
     frame_continuar = Frame(f, bg="#FFFFFF", width=450, height=100)
-    frame_continuar.pack(pady=5)
+    frame_continuar.grid(row=4, column=0, columnspan=2, pady=5)
     
     canvas_continuar = Canvas(frame_continuar, bg="#FFFFFF", width=450, height=100, highlightthickness=0)
     scrollbar_continuar = Scrollbar(frame_continuar, orient="horizontal", command=canvas_continuar.xview)
@@ -129,10 +161,10 @@ def frame_plataforma(root, listaContinuar, listaNovedades):
     canvas_continuar.configure(scrollregion=canvas_continuar.bbox("all"))
 
     # Sección "Novedades"
-    Label(f,text="Novedades",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).pack(pady=5)
+    Label(f,text="Novedades",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).grid(row=5, column=0, columnspan=2, pady=5)
 
     frame_novedades = Frame(f, bg="#FFFFFF", width=450, height=100)
-    frame_novedades.pack(pady=5)
+    frame_novedades.grid(row=6, column=0, columnspan=2, pady=5)
 
     canvas_novedades = Canvas(frame_novedades, bg="#FFFFFF", width=450, height=100, highlightthickness=0)
     scrollbar_novedades = Scrollbar(frame_novedades, orient="horizontal", command=canvas_novedades.xview)
