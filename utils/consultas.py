@@ -54,7 +54,7 @@ def upd_contrasena(cursor,correo,contrasena):
 
 def continuar_viendo(cursor,idperfil):
     consultaContinuar = """
-    select p.nombre , m2.titulo, m.porcentaje_visto 
+    select p.nombre , m2.titulo, m.porcentaje_visto, m2.id_multimedia 
     from perfiles p , miro m , multimedias m2 
     where p.id_perfil = m.id_perfil and m.id_multimedia = m2.id_multimedia and p.id_perfil = %s and m.porcentaje_visto < 100
     limit 5
@@ -62,9 +62,10 @@ def continuar_viendo(cursor,idperfil):
     cursor.execute(consultaContinuar,(idperfil,))
     filaContinuar = cursor.fetchall()
     return filaContinuar
+
 def novedades(cursor):
     consultaNovedades = """
-    select m.titulo 
+    select m.titulo, m.id_multimedia
     from multimedias m 
     order by m.fecha_agregacion desc
     limit 5
@@ -91,5 +92,15 @@ def buscarInfo(cursor, id):
     where m.id_multimedia = ep.id_multimedia  and ep.id_artista = a.id_artista and m.id_multimedia = %s
     """
     cursor.execute(consultaTitulo,(id,))
+    listaInfo = cursor.fetchall()
+    return listaInfo
+
+def buscarInfoTi(cursor, titulo):
+    consultaInfo = """
+    select m.titulo ,m.valoracion , a.nombre ,a.apellido, ep.rol , m.duracion , m.plot , m.genero 
+    from multimedias m , artistas a , equipo_produccion ep
+    where m.id_multimedia = ep.id_multimedia  and ep.id_artista = a.id_artista and m.titulo = "%s"
+    """
+    cursor.execute(consultaInfo, (titulo,))
     listaInfo = cursor.fetchall()
     return listaInfo
