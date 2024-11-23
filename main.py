@@ -120,7 +120,7 @@ def busq(texto):
 #Ventana principal
 root=tk.Tk()
 root.title("Plataforma Streaming")
-root.geometry("450x550")
+root.geometry("450x600")
 frameactual=None
 root.configure(bg = "#292F36")
 

@@ -97,7 +97,7 @@ def frame_nuevacontra(root, usuario, nuevacontra):
     return f
 
 def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = ""):
-    f = Frame(root, bg="#FFFFFF", width=450, height=450)
+    f = Frame(root, bg="#FFFFFF", width=450, height=600)
     f.grid_propagate(False)
 
     # Título principal
