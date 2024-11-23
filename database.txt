@@ -1,0 +1,666 @@
+create database proyecto_pc2;
+USE proyecto_pc2;
+
+
+create table usuarios(
+	id_usuario int not null auto_increment,
+	mail char(30) not null,
+	contrasena char(10) not null,
+	primary key(id_usuario)
+);
+
+create table intentos(
+	id_intento int not null auto_increment,
+	fecha date not null,
+	hora time not null,
+	exitosa bool not null,
+	id_usuario int not null,
+	primary key(id_intento),
+	foreign key(id_usuario) references usuarios(id_usuario)
+);
+
+create table perfiles(
+	id_perfil int not null auto_increment,
+	nombre char(10) not null,
+	tipo char(10) not null,
+	id_usuario int not null,
+	primary key(id_perfil),
+	foreign key(id_usuario) references usuarios(id_usuario)
+);
+
+create table multimedias(
+	id_multimedia int not null auto_increment,
+	titulo char(50) not null,
+	plot char (100) not null,
+	valoracion float not null,
+	atp bool not null,
+	genero char(15) not null,
+	fecha_lanzamiento date not null,
+	fecha_agregacion date not null,
+	duracion float not null,
+	primary key(id_multimedia)
+);
+
+create table peliculas(
+	id_multimedia int not null auto_increment,
+	saga char(30),
+	primary key(id_multimedia),
+	foreign key(id_multimedia) references multimedias(id_multimedia)
+	
+);
+create table series(
+	id_serie int not null auto_increment,
+	nombre char(30) not null,
+	primary key(id_serie)
+);
+
+create table capitulos(
+	id_multimedia int not null auto_increment,
+	nombre char(30) not null,
+	id_serie int not null,
+	nro_temporada int not null,
+	primary key(id_multimedia),
+	foreign key(id_multimedia) references multimedias(id_multimedia),
+	foreign key(id_serie) references series(id_serie)
+);
+
+
+
+create table miro(
+	id_perfil int not null,
+	id_multimedia int not null,
+	porcentaje_visto float not null,
+	valoracion int,
+	primary key(id_perfil,id_multimedia),
+	foreign key(id_perfil) references perfiles(id_perfil),
+	foreign key(id_multimedia) references multimedias(id_multimedia)
+);
+
+create table lenguajes(
+	id_lenguaje int not null auto_increment,
+	nombre char(10) not null,
+	primary key(id_lenguaje)
+);
+
+create table traducciones(
+	id_multimedia int not null,
+	id_lenguaje int not null,
+	primary key(id_multimedia,id_lenguaje),
+	foreign key(id_multimedia) references multimedias(id_multimedia),
+	foreign key(id_lenguaje) references lenguajes(id_lenguaje)
+);
+
+create table artistas(
+	id_artista int not null auto_increment,
+	nombre char(20) not null,
+	apellido char(20) not null,
+	primary key(id_artista)
+);
+
+create table equipo_produccion(
+	 id_artista int not null,
+	 id_multimedia int not null,
+	 rol char(10),
+	 primary key(id_artista,id_multimedia),
+	 foreign key(id_artista) references artistas(id_artista),
+	 foreign key(id_multimedia) references multimedias(id_multimedia)
+);
+
+
+-- MULTIMEDIAS -----------------------------------------------------------------------------------------------
+-- Películas de Star Wars
+INSERT INTO multimedias (titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion, fecha_agregacion)
+VALUES
+('Star Wars: A New Hope', 'Un joven granjero se une a la Rebelión para derrotar al Imperio Galáctico.', 4.5, TRUE, 'Ciencia Ficción', '1977-05-25', 121.0, '1980-03-15'),
+('Star Wars: The Empire Strikes Back', 'La Rebelión está en retirada mientras el Imperio lanza una caza imparable.', 4.7, TRUE, 'Ciencia Ficción', '1980-05-21', 124.0, '1985-07-12'),
+('Star Wars: Return of the Jedi', 'Luke Skywalker se enfrenta a Darth Vader y al Emperador para salvar la galaxia.', 4.6, TRUE, 'Ciencia Ficción', '1983-05-25', 131.0, '1986-11-05'),
+('Star Wars: The Phantom Menace', 'Los Jedi enfrentan una nueva amenaza en la galaxia.', 3.5, TRUE, 'Ciencia Ficción', '1999-05-19', 136.0, '2003-01-22'),
+('Star Wars: Attack of the Clones', 'La guerra de los clones comienza, y la galaxia se enfrenta al caos.', 3.8, TRUE, 'Ciencia Ficción', '2002-05-16', 142.0, '2010-08-14'),
+('Star Wars: Revenge of the Sith', 'La caída de los Jedi y el ascenso del Imperio Galáctico.', 4.1, TRUE, 'Ciencia Ficción', '2005-05-19', 140.0, '2015-04-10');
+
+-- Películas de El Señor de los Anillos
+INSERT INTO multimedias (titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion, fecha_agregacion)
+VALUES
+('The Lord of the Rings: The Fellowship of the Ring', 'Un joven hobbit se une a un grupo para destruir un anillo poderoso.', 4.9, TRUE, 'Fantasía', '2001-12-19', 178.0, '2005-06-18'),
+('The Lord of the Rings: The Two Towers', 'Los miembros de la comunidad deben enfrentarse a sus propios desafíos en la guerra.', 4.8, TRUE, 'Fantasía', '2002-12-18', 179.0, '2007-02-12'),
+('The Lord of the Rings: The Return of the King', 'El destino de la Tierra Media depende de la última batalla por el anillo.', 5.0, TRUE, 'Fantasía', '2003-12-17', 201.0, '2011-09-03');
+
+-- Películas sin saga
+INSERT INTO multimedias (titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion, fecha_agregacion)
+VALUES
+('Inception', 'Un ladrón roba secretos usando los sueños, y su misión final es plantar una idea.', 4.5, TRUE, 'Ciencia Ficción', '2010-07-16', 148.0, '2012-11-15'),
+('The Dark Knight', 'Batman enfrenta al Joker, quien busca sumergir Gotham en el caos total.', 5.0, TRUE, 'Acción', '2008-07-18', 152.0, '2011-05-22'),
+('Gladiator', 'Un general romano traicionado busca venganza como gladiador en la arena.', 4.7, TRUE, 'Épico', '2000-05-05', 155.0, '2004-04-03'),
+('Forrest Gump', 'La historia de un hombre sencillo cuya vida involuntariamente afecta grandes eventos.', 4.8, TRUE, 'Drama', '1994-07-06', 142.0, '1998-10-20'),
+('The Matrix', 'Un hombre descubre que la realidad es una simulación creada por máquinas.', 4.7, TRUE, 'Ciencia Ficción', '1999-03-31', 136.0, '2001-09-14'),
+('Titanic', 'El romance entre una aristócrata y un artista en el trágico hundimiento del Titanic.', 4.3, TRUE, 'Romántico', '1997-12-19', 195.0, '2000-02-10');
+
+-- Series: Breaking Bad
+INSERT INTO multimedias (titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion, fecha_agregacion)
+VALUES
+('Breaking Bad S1E1', 'Walter se convierte en cocinero de metanfetamina', 4.5, FALSE, 'Drama', '2008-01-20', 58.0, '2009-04-01'),
+('Breaking Bad S1E2', 'Walter enfrenta las consecuencias de su primer negocio', 4.6, FALSE, 'Drama', '2008-01-27', 48.0, '2010-06-20'),
+('Breaking Bad S1E3', 'La primera venta de Walter y Jesse se complica', 4.5, FALSE, 'Drama', '2008-02-03', 47.0, '2011-09-14'),
+('Breaking Bad S1E4', 'Walter enfrenta tensiones familiares', 4.6, FALSE, 'Drama', '2008-02-10', 47.0, '2012-11-30'),
+('Breaking Bad S2E1', 'Walter enfrenta nuevas amenazas mientras crece su imperio', 4.7, FALSE, 'Drama', '2009-03-08', 54.0, '2013-03-19'),
+('Breaking Bad S2E2', 'Walter y Jesse tienen que lidiar con las consecuencias de su negocio', 4.7, FALSE, 'Drama', '2009-03-15', 50.0, '2014-08-22');
+
+-- Series: Game of Thrones
+INSERT INTO multimedias (titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion, fecha_agregacion)
+VALUES
+('Game of Thrones S1E1', 'Winter is coming', 4.9, FALSE, 'Fantasía', '2011-04-17', 62.0, '2012-07-05'),
+('Game of Thrones S1E2', 'The Kingsroad', 4.8, FALSE, 'Fantasía', '2011-04-24', 56.0, '2013-02-14'),
+('Game of Thrones S1E3', 'Lord Snow', 4.8, FALSE, 'Fantasía', '2011-05-01', 58.0, '2014-09-10'),
+('Game of Thrones S2E1', 'The North Remembers', 4.9, FALSE, 'Fantasía', '2012-04-01', 62.0, '2015-01-25'),
+('Game of Thrones S2E2', 'The Prince of Winterfell', 4.9, FALSE, 'Fantasía', '2012-04-08', 60.0, '2016-05-09');
+
+-- Series: The Witcher
+INSERT INTO multimedias (titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion, fecha_agregacion)
+VALUES
+('The Witcher S1E1', 'Geralt de Rivia, un cazador de monstruos, se enfrenta a dilemas morales y criaturas sobrenaturales.', 4.5, FALSE, 'Fantasía', '2019-12-20', 60.0, '2021-02-03'),
+('The Witcher S1E2', 'La caza de monstruos lleva a Geralt a nuevos desafíos.', 4.6, FALSE, 'Fantasía', '2019-12-20', 58.0, '2021-07-15'),
+('The Witcher S1E3', 'Geralt encuentra un nuevo aliado mientras enfrenta a un extraño enemigo.', 4.7, FALSE, 'Fantasía', '2019-12-20', 61.0, '2022-01-10'),
+('The Witcher S2E1', 'Geralt regresa a Kaer Morhen para proteger a Ciri.', 4.8, FALSE, 'Fantasía', '2021-12-17', 60.0, '2023-05-18'),
+('The Witcher S2E2', 'Un nuevo peligro amenaza a los cazadores de monstruos.', 4.8, FALSE, 'Fantasía', '2021-12-17', 59.0, '2023-08-29');
+
+-- Especialización en películas
+INSERT INTO peliculas (id_multimedia, saga)
+VALUES
+(1, 'Star Wars'),  -- Star Wars: A New Hope
+(2, 'Star Wars'),  -- Star Wars: The Empire Strikes Back
+(3, 'Star Wars'),  -- Star Wars: Return of the Jedi
+(4, 'Star Wars'),  -- Star Wars: The Phantom Menace
+(5, 'Star Wars'),  -- Star Wars: Attack of the Clones
+(6, 'Star Wars'),  -- Star Wars: Revenge of the Sith
+(7, 'The Lord of the Rings'),  -- The Lord of the Rings: The Fellowship of the Ring
+(8, 'The Lord of the Rings'),  -- The Lord of the Rings: The Two Towers
+(9, 'The Lord of the Rings'),  -- The Lord of the Rings: The Return of the King
+(10, NULL),  -- Inception
+(11, NULL),  -- The Dark Knight
+(12, NULL),  -- Gladiator
+(13, NULL),  -- Forrest Gump
+(14, NULL),  -- The Matrix
+(15, NULL);  -- Titanic
+
+insert into series (nombre)
+values 
+('Breaking Bad'),
+('Game of Thrones'),
+('The Witcher');
+
+-- Especialización en capítulos
+INSERT INTO capitulos (id_multimedia, nombre, id_serie, nro_temporada)
+VALUES
+(16, 'S1E1',1, 1),
+(17, 'S1E2',1, 1),
+(18, 'S1E3',1, 1),
+(19, 'S1E4',1, 1),
+(20, 'S2E1',1, 2),
+(21, 'S2E2',1, 2),
+(22, 'S1E1',2, 1),
+(23, 'S1E2',2, 1),
+(24, 'S1E3',2, 1),
+(25, 'S2E1',2, 2),
+(26, 'S2E2',2, 2),
+(27, 'S1E1',3, 1),
+(28, 'S1E2',3, 1),
+(29, 'S1E3',3, 1),
+(30, 'S2E1',3, 2),
+(31, 'S2E2',3, 2);
+-- MULTIMEDIAS -----------------------------------------------------------------------------------------------
+
+-- USUARIOS---------------------------------------------------------------------------------------------------
+INSERT INTO usuarios (mail, contrasena)
+VALUES
+('garciabigiluka@gmail.com', '1234'),
+('valu.iezzi@gmail.com', 'PK3dl'),
+('jmbajo@gmail.com', 'RWoPC');
+
+INSERT INTO perfiles (nombre, tipo, id_usuario)
+VALUES
+('Yo', 'Adulto', 1),
+('Mamá', 'Adulto', 1),
+('Simon', 'Niño', 1);
+
+INSERT INTO perfiles (nombre, tipo, id_usuario)
+VALUES
+('Valu', 'Adulto', 2),
+('Papá', 'Adulto', 2),
+('Mamá', 'Adulto', 2),
+('Cosa', 'Niño', 2);
+
+INSERT INTO perfiles (nombre, tipo, id_usuario)
+VALUES
+('JMBajo1', 'Adulto', 3);
+-- USUARIOS---------------------------------------------------------------------------------------------------
+
+-- INTENTOS---------------------------------------------------------------------------------------------------
+INSERT INTO intentos (fecha, hora, exitosa, id_usuario)
+VALUES
+('2024-03-12', '08:15:00', true, 1),  -- Luka, intento exitoso
+('2024-03-12', '08:20:00', false, 2), -- Valentina, intento fallido
+('2024-03-12', '08:30:00', true, 2),  -- Valentina, intento exitoso
+('2024-03-13', '10:00:00', false, 1), -- Luka, intento fallido
+('2024-03-13', '10:05:00', false, 1), -- Luka, intento fallido
+('2024-03-13', '10:10:00', true, 1),  -- Luka, intento exitoso
+('2024-04-02', '11:45:00', false, 3), -- JMBajo, intento fallido
+('2024-04-02', '11:50:00', true, 3),  -- JMBajo, intento exitoso
+('2024-05-05', '13:00:00', false, 2), -- Valentina, intento fallido
+('2024-05-05', '13:10:00', true, 2),  -- Valentina, intento exitoso
+('2024-06-15', '14:30:00', false, 1), -- Luka, intento fallido
+('2024-06-15', '14:35:00', true, 1),  -- Luka, intento exitoso
+('2024-07-10', '16:00:00', false, 3), -- JMBajo, intento fallido
+('2024-07-10', '16:05:00', true, 3),  -- JMBajo, intento exitoso
+('2024-08-20', '17:50:00', true, 2),  -- Valentina, intento exitoso
+('2024-09-25', '19:00:00', false, 1), -- Luka, intento fallido
+('2024-10-03', '20:30:00', false, 2), -- Valentina, intento fallido
+('2024-10-03', '20:35:00', true, 2),  -- Valentina, intento exitoso
+('2024-11-12', '21:05:00', true, 3);  -- JMBajo, intento exitoso
+-- INTENTOS---------------------------------------------------------------------------------------------------
+
+-- TRADUCCIONES-----------------------------------------------------------------------------------------------
+INSERT INTO lenguajes (nombre) 
+VALUES 
+('Español'),
+('Inglés'),
+('Francés');
+
+INSERT INTO traducciones (id_multimedia, id_lenguaje)
+VALUES
+(1, 1), (1, 2),
+(2, 1), (2, 2), (2, 3),
+(3, 1), (3, 3),
+(4, 1), (4, 2), (4, 3),
+(5, 1), (5, 2),
+(6, 2), (6, 3),
+(7, 1), (7, 3),
+(8, 1), (8, 2), (8, 3),
+(9, 1), (9, 2),
+(10, 1), (10, 2), (10, 3),
+(11, 1), (11, 2),
+(12, 2), (12, 3),
+(13, 1), (13, 3),
+(14, 1), (14, 2), (14, 3),
+(15, 1), (15, 2),
+(16, 1), (16, 2), (16, 3),
+(17, 2), (17, 3),
+(18, 1), (18, 3),
+(19, 1), (19, 2),
+(20, 1), (20, 2), (20, 3),
+(21, 2), (21, 3),
+(22, 1), (22, 2),
+(23, 1), (23, 3),
+(24, 2), (24, 3),
+(25, 1), (25, 2), (25, 3),
+(26, 1), (26, 3),
+(27, 1), (27, 2),
+(28, 2), (28, 3),
+(29, 1), (29, 2),
+(30, 2), (30, 3),
+(31, 1), (31, 2);
+-- TRADUCCIONES-----------------------------------------------------------------------------------------------
+
+-- EQUIPO PRODUCCION------------------------------------------------------------------------------------------
+INSERT INTO artistas (nombre, apellido) VALUES
+('Mark', 'Hamill'),   -- Actor (Luke Skywalker)
+('Harrison', 'Ford'), -- Actor (Han Solo)
+('Carrie', 'Fisher'), -- Actor (Leia Organa)
+('George', 'Lucas'),  -- Director (Star Wars)
+('Peter', 'Jackson'), -- Director (El Señor de los Anillos)
+('Christian', 'Bale'), -- Actor (Batman)
+('Heath', 'Ledger'), -- Actor (Joker)
+('Leonardo', 'DiCaprio'), -- Actor (Inception)
+('Tom', 'Hanks'),    -- Actor (Forrest Gump)
+('Keanu', 'Reeves'), -- Actor (The Matrix)
+('Cate', 'Blanchett'), -- Actriz (The Lord of the Rings)
+('Elijah', 'Wood'),  -- Actor (Frodo)
+('Viggo', 'Mortensen'), -- Actor (Aragorn)
+('Sean', 'Bean'),    -- Actor (Boromir)
+('Ben', 'Affleck'),  -- Actor (Batman)
+('Matt', 'Damon'),   -- Actor (The Martian)
+('Anne', 'Hathaway'), -- Actriz (Interstellar)
+('Johnny', 'Depp'), -- Actor (Pirates of the Caribbean)
+('Emma', 'Watson'),  -- Actriz (Harry Potter)
+('Joaquin', 'Phoenix'), -- Actor (Gladiator)
+('Tom', 'Cruise'),   -- Actor (Mission: Impossible)
+('Will', 'Smith'),   -- Actor (Men in Black)
+('Natalie', 'Portman'), -- Actriz (Black Swan)
+('Morgan', 'Freeman'), -- Actor (Shawshank Redemption)
+('Sandra', 'Bullock'), -- Actriz (Gravity)
+('Meryl', 'Streep'), -- Actriz (The Devil Wears Prada)
+('Robert', 'Pattinson'), -- Actor (Twilight)
+('Jennifer', 'Lawrence'), -- Actriz (The Hunger Games)
+('Samuel', 'Jackson'); -- Actor (Pulp Fiction)
+
+-- Star Wars: A New Hope (id_multimedia = 1)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(1, 1, 'actor'),  -- Mark Hamill (Luke Skywalker)
+(2, 1, 'actor'),  -- Harrison Ford (Han Solo)
+(3, 1, 'actor'),  -- Carrie Fisher (Leia Organa)
+(4, 1, 'director'); -- George Lucas
+
+-- Star Wars: The Empire Strikes Back (id_multimedia = 2)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(1, 2, 'actor'),  -- Mark Hamill (Luke Skywalker)
+(2, 2, 'actor'),  -- Harrison Ford (Han Solo)
+(3, 2, 'actor'),  -- Carrie Fisher (Leia Organa)
+(4, 2, 'director'); -- George Lucas
+
+-- Star Wars: Return of the Jedi (id_multimedia = 3)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(1, 3, 'actor'),  -- Mark Hamill (Luke Skywalker)
+(2, 3, 'actor'),  -- Harrison Ford (Han Solo)
+(3, 3, 'actor'),  -- Carrie Fisher (Leia Organa)
+(4, 3, 'director'); -- George Lucas
+
+-- Star Wars: The Phantom Menace (id_multimedia = 4)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(1, 4, 'actor'),  -- Mark Hamill (Luke Skywalker)
+(5, 4, 'director'); -- George Lucas
+
+-- Star Wars: Attack of the Clones (id_multimedia = 5)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(1, 5, 'actor'),  -- Mark Hamill (Luke Skywalker)
+(5, 5, 'director'); -- George Lucas
+
+-- Star Wars: Revenge of the Sith (id_multimedia = 6)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(1, 6, 'actor'),  -- Mark Hamill (Luke Skywalker)
+(5, 6, 'director'); -- George Lucas
+
+-- The Lord of the Rings: The Fellowship of the Ring (id_multimedia = 7)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(12, 7, 'actor'),  -- Elijah Wood (Frodo)
+(13, 7, 'actor'),  -- Viggo Mortensen (Aragorn)
+(14, 7, 'actor'),  -- Sean Bean (Boromir)
+(5, 7, 'director'); -- Peter Jackson
+
+-- The Lord of the Rings: The Two Towers (id_multimedia = 8)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(12, 8, 'actor'),  -- Elijah Wood (Frodo)
+(13, 8, 'actor'),  -- Viggo Mortensen (Aragorn)
+(14, 8, 'actor'),  -- Sean Bean (Boromir)
+(5, 8, 'director'); -- Peter Jackson
+
+-- The Lord of the Rings: The Return of the King (id_multimedia = 9)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(12, 9, 'actor'),  -- Elijah Wood (Frodo)
+(13, 9, 'actor'),  -- Viggo Mortensen (Aragorn)
+(14, 9, 'actor'),  -- Sean Bean (Boromir)
+(5, 9, 'director'); -- Peter Jackson
+
+-- Inception (id_multimedia = 10)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(8, 10, 'actor'),  -- Leonardo DiCaprio (Dom Cobb)
+(5, 10, 'director'); -- Christopher Nolan
+
+-- The Dark Knight (id_multimedia = 11)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(6, 11, 'actor'),  -- Christian Bale (Batman)
+(7, 11, 'actor'),  -- Heath Ledger (Joker)
+(5, 11, 'director'); -- Christopher Nolan
+
+-- Gladiator (id_multimedia = 12)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(19, 12, 'actor'),  -- Joaquin Phoenix (Commodus)
+(8, 12, 'actor'),   -- Russell Crowe (Maximus)
+(5, 12, 'director'); -- Ridley Scott
+
+-- Forrest Gump (id_multimedia = 13)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(10, 13, 'actor'),  -- Tom Hanks (Forrest Gump)
+(5, 13, 'director'); -- Robert Zemeckis
+
+-- The Matrix (id_multimedia = 14)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(10, 14, 'actor'),  -- Keanu Reeves (Neo)
+(5, 14, 'director'); -- The Wachowskis
+
+-- Titanic (id_multimedia = 15)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(18, 15, 'actor'),  -- Leonardo DiCaprio (Jack Dawson)
+(5, 15, 'director'); -- James Cameron
+
+-- Breaking Bad S1E1 (id_multimedia = 16)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(13, 16, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 16, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 16, 'director'); -- Vince Gilligan
+
+-- Breaking Bad S1E2 (id_multimedia = 17)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(13, 17, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 17, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 17, 'director'); -- Vince Gilligan
+
+-- Breaking Bad S1E3 (id_multimedia = 18)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(13, 18, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 18, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 18, 'director'); -- Vince Gilligan
+
+-- Breaking Bad S1E4 (id_multimedia = 19)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(13, 19, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 19, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 19, 'director'); -- Vince Gilligan
+
+-- Breaking Bad S2E1 (id_multimedia = 20)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(13, 20, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 20, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 20, 'director'); -- Vince Gilligan
+
+-- Breaking Bad S2E2 (id_multimedia = 21)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(13, 21, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 21, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 21, 'director'); -- Vince Gilligan
+
+-- Game of Thrones S1E1 (id_multimedia = 22)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(15, 22, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 22, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 22, 'director'); -- David Benioff
+
+-- Game of Thrones S1E2 (id_multimedia = 23)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(15, 23, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 23, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 23, 'director'); -- David Benioff
+
+-- Game of Thrones S1E3 (id_multimedia = 24)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(15, 24, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 24, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 24, 'director'); -- David Benioff
+
+-- Game of Thrones S2E1 (id_multimedia = 25)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(15, 25, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 25, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 25, 'director'); -- David Benioff
+
+-- Game of Thrones S2E2 (id_multimedia = 26)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(15, 26, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 26, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 26, 'director'); -- David Benioff
+
+-- The Witcher S1E1 (id_multimedia = 27)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(17, 27, 'actor'),  -- Henry Cavill (Geralt)
+(18, 27, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 27, 'director'); -- Lauren Schmidt Hissrich
+
+-- The Witcher S1E2 (id_multimedia = 28)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(17, 28, 'actor'),  -- Henry Cavill (Geralt)
+(18, 28, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 28, 'director'); -- Lauren Schmidt Hissrich
+
+-- The Witcher S1E3 (id_multimedia = 29)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(17, 29, 'actor'),  -- Henry Cavill (Geralt)
+(18, 29, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 29, 'director'); -- Lauren Schmidt Hissrich
+
+-- The Witcher S2E1 (id_multimedia = 30)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(17, 30, 'actor'),  -- Henry Cavill (Geralt)
+(18, 30, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 30, 'director'); -- Lauren Schmidt Hissrich
+
+-- The Witcher S2E2 (id_multimedia = 31)
+INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
+(17, 31, 'actor'),  -- Henry Cavill (Geralt)
+(18, 31, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 31, 'director'); -- Lauren Schmidt Hissrich
+-- EQUIPO PRODUCCION------------------------------------------------------------------------------------------
+
+-- MIRO-------------------------------------------------------------------------------------------------------
+-- Usuario: Yo (Perfil 1)
+INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
+(1, 1, 100, 5), -- Star Wars: A New Hope
+(1, 2, 90, 4), -- Star Wars: The Empire Strikes Back
+(1, 3, 100, 5), -- Star Wars: Return of the Jedi
+(1, 4, 50, 3), -- Star Wars: The Phantom Menace
+(1, 5, 80, 4), -- Star Wars: Attack of the Clones
+(1, 6, 100, 5), -- Star Wars: Revenge of the Sith
+(1, 7, 75, 4), -- The Lord of the Rings: The Fellowship of the Ring
+(1, 8, 60, 3), -- The Lord of the Rings: The Two Towers
+(1, 9, 95, 5), -- The Lord of the Rings: The Return of the King
+(1, 10, 100, 5), -- Inception
+(1, 11, 85, 4), -- The Dark Knight
+(1, 12, 90, 4), -- Gladiator
+(1, 13, 80, 4), -- Forrest Gump
+(1, 14, 95, 5), -- The Matrix
+(1, 15, 70, 3); -- Titanic
+
+-- Usuario: Mamá (Perfil 2)
+INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
+(2, 1, 100, 5), -- Star Wars: A New Hope
+(2, 2, 100, 4), -- Star Wars: The Empire Strikes Back
+(2, 3, 100, 5), -- Star Wars: Return of the Jedi
+(2, 4, 100, 4), -- Star Wars: The Phantom Menace
+(2, 5, 90, 4), -- Star Wars: Attack of the Clones
+(2, 6, 100, 5), -- Star Wars: Revenge of the Sith
+(2, 7, 80, 5), -- The Lord of the Rings: The Fellowship of the Ring
+(2, 8, 85, 4), -- The Lord of the Rings: The Two Towers
+(2, 9, 100, 5), -- The Lord of the Rings: The Return of the King
+(2, 10, 100, 5), -- Inception
+(2, 11, 100, 5), -- The Dark Knight
+(2, 12, 90, 4), -- Gladiator
+(2, 13, 90, 5), -- Forrest Gump
+(2, 14, 80, 3), -- The Matrix
+(2, 15, 60, 2); -- Titanic
+
+-- Usuario: Simon (Perfil 3 - Niño)
+-- Solo puede ver las multimedias con atp = 1
+INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
+(3, 1, 80, 4), -- Star Wars: A New Hope
+(3, 2, 90, 4), -- Star Wars: The Empire Strikes Back
+(3, 3, 100, 5), -- Star Wars: Return of the Jedi
+(3, 5, 70, 3), -- Star Wars: Attack of the Clones
+(3, 6, 60, 2), -- Star Wars: Revenge of the Sith
+(3, 7, 85, 4), -- The Lord of the Rings: The Fellowship of the Ring
+(3, 8, 90, 4), -- The Lord of the Rings: The Two Towers
+(3, 9, 95, 5), -- The Lord of the Rings: The Return of the King
+(3, 10, 80, 4), -- Inception
+(3, 11, 100, 5), -- The Dark Knight
+(3, 12, 60, 3), -- Gladiator
+(3, 13, 70, 4), -- Forrest Gump
+(3, 14, 90, 4), -- The Matrix
+(3, 15, 50, 2); -- Titanic
+
+-- Usuario: Valu (Perfil 4)
+INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
+(4, 1, 100, 5), -- Star Wars: A New Hope
+(4, 2, 100, 4), -- Star Wars: The Empire Strikes Back
+(4, 3, 100, 5), -- Star Wars: Return of the Jedi
+(4, 4, 100, 4), -- Star Wars: The Phantom Menace
+(4, 5, 90, 4), -- Star Wars: Attack of the Clones
+(4, 6, 100, 5), -- Star Wars: Revenge of the Sith
+(4, 7, 80, 5), -- The Lord of the Rings: The Fellowship of the Ring
+(4, 8, 85, 4), -- The Lord of the Rings: The Two Towers
+(4, 9, 100, 5), -- The Lord of the Rings: The Return of the King
+(4, 10, 100, 5), -- Inception
+(4, 11, 100, 5), -- The Dark Knight
+(4, 12, 90, 4), -- Gladiator
+(4, 13, 90, 5), -- Forrest Gump
+(4, 14, 80, 3), -- The Matrix
+(4, 15, 60, 2); -- Titanic
+
+-- Usuario: Papá (Perfil 5)
+INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
+(5, 1, 70, 3), -- Star Wars: A New Hope
+(5, 2, 60, 2), -- Star Wars: The Empire Strikes Back
+(5, 3, 85, 4), -- Star Wars: Return of the Jedi
+(5, 4, 80, 3), -- Star Wars: The Phantom Menace
+(5, 5, 70, 4), -- Star Wars: Attack of the Clones
+(5, 6, 60, 3), -- Star Wars: Revenge of the Sith
+(5, 7, 100, 5), -- The Lord of the Rings: The Fellowship of the Ring
+(5, 8, 90, 4), -- The Lord of the Rings: The Two Towers
+(5, 9, 95, 5), -- The Lord of the Rings: The Return of the King
+(5, 10, 85, 4), -- Inception
+(5, 11, 75, 3), -- The Dark Knight
+(5, 12, 80, 4), -- Gladiator
+(5, 13, 90, 5), -- Forrest Gump
+(5, 14, 90, 4), -- The Matrix
+(5, 15, 50, 2); -- Titanic
+
+-- Usuario: Mamá (Perfil 6)
+INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
+(6, 1, 60, 3), -- Star Wars: A New Hope
+(6, 2, 70, 3), -- Star Wars: The Empire Strikes Back
+(6, 3, 85, 4), -- Star Wars: Return of the Jedi
+(6, 4, 75, 3), -- Star Wars: The Phantom Menace
+(6, 5, 80, 4), -- Star Wars: Attack of the Clones
+(6, 6, 60, 2), -- Star Wars: Revenge of the Sith
+(6, 7, 90, 4), -- The Lord of the Rings: The Fellowship of the Ring
+(6, 8, 80, 3), -- The Lord of the Rings: The Two Towers
+(6, 9, 100, 5), -- The Lord of the Rings: The Return of the King
+(6, 10, 70, 3), -- Inception
+(6, 11, 90, 4), -- The Dark Knight
+(6, 12, 100, 5), -- Gladiator
+(6, 13, 85, 4), -- Forrest Gump
+(6, 14, 95, 5), -- The Matrix
+(6, 15, 50, 2); -- Titanic
+
+-- Usuario: Cosa (Perfil 7 - Niño)
+-- Solo puede ver las multimedias con atp = 1
+INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
+(7, 1, 50, 3), -- Star Wars: A New Hope
+(7, 2, 60, 3), -- Star Wars: The Empire Strikes Back
+(7, 3, 80, 4), -- Star Wars: Return of the Jedi
+(7, 5, 60, 3), -- Star Wars: Attack of the Clones
+(7, 6, 70, 3), -- Star Wars: Revenge of the Sith
+(7, 7, 100, 5), -- The Lord of the Rings: The Fellowship of the Ring
+(7, 8, 90, 4), -- The Lord of the Rings: The Two Towers
+(7, 9, 95, 5), -- The Lord of the Rings: The Return of the King
+(7, 10, 50, 2), -- Inception
+(7, 11, 40, 2), -- The Dark Knight
+(7, 12, 30, 2), -- Gladiator
+(7, 13, 20, 1), -- Forrest Gump
+(7, 14, 70, 3), -- The Matrix
+(7, 15, 50, 2); -- Titanic
+
+-- Usuario: JMBajo1 (Perfil 8)
+INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
+(8, 1, 50, 3), -- Star Wars: A New Hope
+(8, 2, 60, 4), -- Star Wars: The Empire Strikes Back
+(8, 3, 75, 4), -- Star Wars: Return of the Jedi
+(8, 4, 50, 3), -- Star Wars: The Phantom Menace
+(8, 5, 80, 4), -- Star Wars: Attack of the Clones
+(8, 6, 40, 2), -- Star Wars: Revenge of the Sith
+(8, 7, 85, 4), -- The Lord of the Rings: The Fellowship of the Ring
+(8, 8, 90, 4), -- The Lord of the Rings: The Two Towers
+(8, 9, 95, 5), -- The Lord of the Rings: The Return of the King
+(8, 10, 80, 4), -- Inception
+(8, 11, 100, 5), -- The Dark Knight
+(8, 12, 60, 3), -- Gladiator
+(8, 13, 70, 4), -- Forrest Gump
+(8, 14, 90, 4), -- The Matrix
+(8, 15, 50, 2); -- Titanic
+
+-- MIRO-------------------------------------------------------------------------------------------------------
