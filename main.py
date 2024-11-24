@@ -35,7 +35,7 @@ def autenticacion(correo, contraseña):
                     cnx.commit()
                     set_usuario_actual(usuarios[0][0]) #Seteo la variable global
                     listaPer = obtener_perfiles(usuarios[0][0])
-                    frame = frame_perfiles(root, listaPer, servicio)
+                    frame = frame_perfiles(root, listaPer, servicio, crearPerfil= crearPerfil)
                     mostrar_frame(frame)
                 else:#Ingreso incorrencto, el usuario existe en la base de datos pero no con esa contraseña
                     ins_intento(cursor, False, usuarios[0][0]) #Se updatea el ingreso fallido
@@ -97,15 +97,30 @@ def obtener_perfiles(idUsuario):
         finally:
             cursor.close()
 
+def crearPerfil(nombre,tipo,id):
+    if cnx.is_connected:
+        cursor = cnx.cursor()
+        try:
+            insert_perfil(cursor, nombre, tipo, id)
+            cnx.commit()
+        except mysql.connector.Error as err:
+            cnx.rollback()
+            print(f"Error: {err}")
+        finally:
+            cursor.close()
+
 #PLATAFORMA STREAMING
 def servicio(perfil):
     if cnx.is_connected():
         cursor=cnx.cursor()
         try: 
-            listaContinuar = continuar_viendo(cursor, perfil[1]) #Se consulta sobre los continuar viendo y novedades relacionadas a ese perfil
-            listaNovedades = novedades(cursor)
             set_perfil_actual(perfil[1]) #Seteo el perfil actual de manera global
-            frame=frame_plataforma(root, listaContinuar,listaNovedades, busq=busq, vermultimedia=vermultimedia)#Se crea el frame de acurdo a los resultados de las consultas
+            listaContinuar = continuar_viendo(cursor, perfil[1])#Se consulta sobre los continuar viendo y novedades relacionadas a ese perfil
+            if perfil[2] == True:
+                listaNovedades = novedadesFil(cursor,perfil[2])
+            else:
+                listaNovedades = novedades(cursor)
+            frame=frame_plataforma(root, listaContinuar,listaNovedades, perfil[2], busq=busq, vermultimedia=vermultimedia)#Se crea el frame de acurdo a los resultados de las consultas
             mostrar_frame(frame)
         except mysql.connector.Error as err:
             cnx.rollback()
@@ -113,17 +128,21 @@ def servicio(perfil):
         finally:
             cursor.close()
 
-def busq(texto):
+def busq(texto, TipoPer):
     if cnx.is_connected:
         cursor=cnx.cursor()
         try:
-            listaBusqueda = buscarTitulo(cursor, texto) #Consulta que busca titulos relacionados con la barra de busquedas
+            if TipoPer == False:
+                listaBusqueda = buscarTitulo(cursor, texto)
+            else:
+                listaBusqueda = buscarTituloFil(cursor, texto, TipoPer)
             return listaBusqueda
         except mysql.connector.Error as err:
             cnx.rollback()
             print(f"Error: {err}")
         finally:
             cursor.close()
+
 #Multimedias especificas
 def vermultimedia(titulo):#Esta función busca el resumen de datos sobre una multimedia especifica, mostrando todos sus atributos y los artistas en su equipo de producción en un nuevo frame
     if cnx.is_connected:

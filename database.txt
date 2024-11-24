@@ -22,7 +22,7 @@ create table intentos(
 create table perfiles(
 	id_perfil int not null auto_increment,
 	nombre char(10) not null,
-	tipo char(10) not null,
+	tipo bool not null,
 	id_usuario int not null,
 	primary key(id_perfil),
 	foreign key(id_usuario) references usuarios(id_usuario)
@@ -218,20 +218,20 @@ VALUES
 
 INSERT INTO perfiles (nombre, tipo, id_usuario)
 VALUES
-('Yo', 'Adulto', 1),
-('Mamá', 'Adulto', 1),
-('Simon', 'Niño', 1);
+('Yo', FALSE , 1),
+('Mamá', FALSE, 1),
+('Simon', TRUE, 1);
 
 INSERT INTO perfiles (nombre, tipo, id_usuario)
 VALUES
-('Valu', 'Adulto', 2),
-('Papá', 'Adulto', 2),
-('Mamá', 'Adulto', 2),
-('Cosa', 'Niño', 2);
+('Valu', FALSE, 2),
+('Papá', FALSE, 2),
+('Mamá', FALSE, 2),
+('Cosa', TRUE, 2);
 
 INSERT INTO perfiles (nombre, tipo, id_usuario)
 VALUES
-('JMBajo1', 'Adulto', 3);
+('JMBajo1', FALSE, 3);
 -- USUARIOS---------------------------------------------------------------------------------------------------
 
 -- INTENTOS---------------------------------------------------------------------------------------------------
@@ -330,22 +330,8 @@ INSERT INTO artistas (nombre, apellido) VALUES
 ('Meryl', 'Streep'), -- Actriz (The Devil Wears Prada)
 ('Robert', 'Pattinson'), -- Actor (Twilight)
 ('Jennifer', 'Lawrence'), -- Actriz (The Hunger Games)
-('Samuel', 'Jackson') -- Actor (Pulp Fiction)
-('Christopher','Nolan') -- Director
-('Ridley','Scott') -- Director
-('Robert','Zemeckis') -- Director  
-('The','Wachowski')-- Director
-('James','Cameron')-- Director  
-('Vince','Gilligan') -- Director  
-('Bryan','Cranston')-- Actor 
-('Leonardo','DiCaprio')--  Actor
-('Aaron','Paul')-- Actor
-('Emilia','Clarke')-- Actor
-('David','Benioff')-- Director
-('Henry','Cavill')-- Actor   
-('Anya',' Chalotra')-- Actris 
-('Lauren Schmidt','Hissrich');-- Director
-  
+('Samuel', 'Jackson'); -- Actor (Pulp Fiction)
+
 -- Star Wars: A New Hope (id_multimedia = 1)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (1, 1, 'actor'),  -- Mark Hamill (Luke Skywalker)
@@ -370,17 +356,17 @@ INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 -- Star Wars: The Phantom Menace (id_multimedia = 4)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (1, 4, 'actor'),  -- Mark Hamill (Luke Skywalker)
-(4, 4, 'director'); -- George Lucas
+(5, 4, 'director'); -- George Lucas
 
 -- Star Wars: Attack of the Clones (id_multimedia = 5)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (1, 5, 'actor'),  -- Mark Hamill (Luke Skywalker)
-(4, 5, 'director'); -- George Lucas
+(5, 5, 'director'); -- George Lucas
 
 -- Star Wars: Revenge of the Sith (id_multimedia = 6)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (1, 6, 'actor'),  -- Mark Hamill (Luke Skywalker)
-(4, 6, 'director'); -- George Lucas
+(5, 6, 'director'); -- George Lucas
 
 -- The Lord of the Rings: The Fellowship of the Ring (id_multimedia = 7)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
@@ -406,130 +392,130 @@ INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 -- Inception (id_multimedia = 10)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (8, 10, 'actor'),  -- Leonardo DiCaprio (Dom Cobb)
-(30, 10, 'director'); -- Christopher Nolan
+(5, 10, 'director'); -- Christopher Nolan
 
 -- The Dark Knight (id_multimedia = 11)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (6, 11, 'actor'),  -- Christian Bale (Batman)
 (7, 11, 'actor'),  -- Heath Ledger (Joker)
-(30, 11, 'director'); -- Christopher Nolan
+(5, 11, 'director'); -- Christopher Nolan
 
 -- Gladiator (id_multimedia = 12)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (19, 12, 'actor'),  -- Joaquin Phoenix (Commodus)
 (8, 12, 'actor'),   -- Russell Crowe (Maximus)
-(31, 12, 'director'); -- Ridley Scott
+(5, 12, 'director'); -- Ridley Scott
 
 -- Forrest Gump (id_multimedia = 13)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (10, 13, 'actor'),  -- Tom Hanks (Forrest Gump)
-(32, 13, 'director'); -- Robert Zemeckis
+(5, 13, 'director'); -- Robert Zemeckis
 
 -- The Matrix (id_multimedia = 14)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
 (10, 14, 'actor'),  -- Keanu Reeves (Neo)
-(33, 14, 'director'); -- The Wachowskis
+(5, 14, 'director'); -- The Wachowskis
 
 -- Titanic (id_multimedia = 15)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(37, 15, 'actor'),  -- Leonardo DiCaprio (Jack Dawson)
-(34, 15, 'director'); -- James Cameron
+(18, 15, 'actor'),  -- Leonardo DiCaprio (Jack Dawson)
+(5, 15, 'director'); -- James Cameron
 
 -- Breaking Bad S1E1 (id_multimedia = 16)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(36, 16, 'actor'),  -- Bryan Cranston (Walter White)
-(38, 16, 'actor'),  -- Aaron Paul (Jesse Pinkman)
-(35, 16, 'director'); -- Vince Gilligan
+(13, 16, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 16, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 16, 'director'); -- Vince Gilligan
 
 -- Breaking Bad S1E2 (id_multimedia = 17)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(36, 17, 'actor'),  -- Bryan Cranston (Walter White)
-(38, 17, 'actor'),  -- Aaron Paul (Jesse Pinkman)
-(35, 17, 'director'); -- Vince Gilligan
+(13, 17, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 17, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 17, 'director'); -- Vince Gilligan
 
 -- Breaking Bad S1E3 (id_multimedia = 18)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(36, 18, 'actor'),  -- Bryan Cranston (Walter White)
-(38, 18, 'actor'),  -- Aaron Paul (Jesse Pinkman)
-(35, 18, 'director'); -- Vince Gilligan
+(13, 18, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 18, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 18, 'director'); -- Vince Gilligan
 
 -- Breaking Bad S1E4 (id_multimedia = 19)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(36, 19, 'actor'),  -- Bryan Cranston (Walter White)
-(38, 19, 'actor'),  -- Aaron Paul (Jesse Pinkman)
-(35, 19, 'director'); -- Vince Gilligan
+(13, 19, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 19, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 19, 'director'); -- Vince Gilligan
 
 -- Breaking Bad S2E1 (id_multimedia = 20)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(36, 20, 'actor'),  -- Bryan Cranston (Walter White)
-(38, 20, 'actor'),  -- Aaron Paul (Jesse Pinkman)
-(35, 20, 'director'); -- Vince Gilligan
+(13, 20, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 20, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 20, 'director'); -- Vince Gilligan
 
 -- Breaking Bad S2E2 (id_multimedia = 21)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(36, 21, 'actor'),  -- Bryan Cranston (Walter White)
-(38, 21, 'actor'),  -- Aaron Paul (Jesse Pinkman)
-(35, 21, 'director'); -- Vince Gilligan
+(13, 21, 'actor'),  -- Bryan Cranston (Walter White)
+(14, 21, 'actor'),  -- Aaron Paul (Jesse Pinkman)
+(5, 21, 'director'); -- Vince Gilligan
 
 -- Game of Thrones S1E1 (id_multimedia = 22)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(14, 22, 'actor'),  -- Sean Bean (Ned Stark)
-(39, 22, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
-(40, 22, 'director'); -- David Benioff
+(15, 22, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 22, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 22, 'director'); -- David Benioff
 
 -- Game of Thrones S1E2 (id_multimedia = 23)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(14, 23, 'actor'),  -- Sean Bean (Ned Stark)
-(39, 23, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
-(40, 23, 'director'); -- David Benioff
+(15, 23, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 23, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 23, 'director'); -- David Benioff
 
 -- Game of Thrones S1E3 (id_multimedia = 24)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(14, 24, 'actor'),  -- Sean Bean (Ned Stark)
-(39, 24, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
-(40, 24, 'director'); -- David Benioff
+(15, 24, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 24, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 24, 'director'); -- David Benioff
 
 -- Game of Thrones S2E1 (id_multimedia = 25)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(14, 25, 'actor'),  -- Sean Bean (Ned Stark)
-(39, 25, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
-(40, 25, 'director'); -- David Benioff
+(15, 25, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 25, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 25, 'director'); -- David Benioff
 
 -- Game of Thrones S2E2 (id_multimedia = 26)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(14, 26, 'actor'),  -- Sean Bean (Ned Stark)
-(39, 26, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
-(40, 26, 'director'); -- David Benioff
+(15, 26, 'actor'),  -- Sean Bean (Ned Stark)
+(16, 26, 'actor'),  -- Emilia Clarke (Daenerys Targaryen)
+(5, 26, 'director'); -- David Benioff
 
 -- The Witcher S1E1 (id_multimedia = 27)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(41, 27, 'actor'),  -- Henry Cavill (Geralt)
-(42, 27, 'actriz'),  -- Anya Chalotra (Yennefer)
-(43, 27, 'director'); -- Lauren Schmidt Hissrich
+(17, 27, 'actor'),  -- Henry Cavill (Geralt)
+(18, 27, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 27, 'director'); -- Lauren Schmidt Hissrich
 
 -- The Witcher S1E2 (id_multimedia = 28)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(41, 28, 'actor'),  -- Henry Cavill (Geralt)
-(42, 28, 'actriz'),  -- Anya Chalotra (Yennefer)
-(43, 28, 'director'); -- Lauren Schmidt Hissrich
+(17, 28, 'actor'),  -- Henry Cavill (Geralt)
+(18, 28, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 28, 'director'); -- Lauren Schmidt Hissrich
 
 -- The Witcher S1E3 (id_multimedia = 29)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(41, 29, 'actor'),  -- Henry Cavill (Geralt)
-(42, 29, 'actriz'),  -- Anya Chalotra (Yennefer)
-(43, 29, 'director'); -- Lauren Schmidt Hissrich
+(17, 29, 'actor'),  -- Henry Cavill (Geralt)
+(18, 29, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 29, 'director'); -- Lauren Schmidt Hissrich
 
 -- The Witcher S2E1 (id_multimedia = 30)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(41, 30, 'actor'),  -- Henry Cavill (Geralt)
-(42, 30, 'actriz'),  -- Anya Chalotra (Yennefer)
-(43, 30, 'director'); -- Lauren Schmidt Hissrich
+(17, 30, 'actor'),  -- Henry Cavill (Geralt)
+(18, 30, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 30, 'director'); -- Lauren Schmidt Hissrich
 
 -- The Witcher S2E2 (id_multimedia = 31)
 INSERT INTO equipo_produccion (id_artista, id_multimedia, rol) VALUES
-(41, 31, 'actor'),  -- Henry Cavill (Geralt)
-(42, 31, 'actriz'),  -- Anya Chalotra (Yennefer)
-(43, 31, 'director'); -- Lauren Schmidt Hissrich
+(17, 31, 'actor'),  -- Henry Cavill (Geralt)
+(18, 31, 'actriz'),  -- Anya Chalotra (Yennefer)
+(5, 31, 'director'); -- Lauren Schmidt Hissrich
 -- EQUIPO PRODUCCION------------------------------------------------------------------------------------------
 
 -- MIRO-------------------------------------------------------------------------------------------------------
@@ -678,4 +664,3 @@ INSERT INTO miro (id_perfil, id_multimedia, porcentaje_visto, valoracion) VALUES
 (8, 15, 50, 2); -- Titanic
 
 -- MIRO-------------------------------------------------------------------------------------------------------
-

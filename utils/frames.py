@@ -39,32 +39,109 @@ def frame_ingreso(root, autenticacion,*,creacion=None, cambiocontra=None, nuevac
     return f
 ####FRAME DONDE SE INGRESA USUARIO Y CONTRASEÑA###############################################################################
 
+
 ####FRAME DONDE SE MUESTRA LOS PERFILES ASOCIADOS A ESE USUARIO###############################################################
-def frame_perfiles(root, listaPer,servicio):
-    root.geometry("450x450")
+def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
+
+    root.geometry("650x450")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
     
-    Label(f, text="Bienvenido, seleccione un perfil.",bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=20)
-    
+    # Etiqueta inicial
+    Label(f, text="Bienvenido, seleccione un perfil.", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=20)
+
+    # Contenedor para los perfiles
     canvas = Canvas(f, bg="#FFFFFF", highlightthickness=0, width=430, height=300)
     scrollbar = Scrollbar(f, orient="vertical", command=canvas.yview)
     profiles_frame = Frame(canvas, bg="#FFFFFF")
-    
-    for i, perfil in enumerate(listaPer):
-        Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
-        Button(profiles_frame, text="Ingresar", command=lambda p=perfil: servicio(p),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10), relief="flat", width=10).grid(row=i, column=1, padx=10, pady=5)
-    
-    profiles_frame.update_idletasks()
+
     canvas.create_window(0, 0, anchor="nw", window=profiles_frame)
-    canvas.update_idletasks()
-    canvas.configure(yscrollcommand=scrollbar.set, scrollregion=canvas.bbox("all"))
-    
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    # Colocamos el canvas
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
-    
+
+    # Frame para el formulario (invisible inicialmente)
+    form_frame = Frame(f, bg="#FFFFFF")
+    form_frame.pack(pady=10, fill="x")
+    form_frame.pack_forget()  # Ocultar al principio
+
+    def nuevoPer(idUsuario):
+        # Mostrar el formulario
+        form_frame.pack(pady=10, fill="x")
+        form_frame.lift()
+
+        # Variables de entrada
+        tipo = StringVar()
+        nombre = StringVar()
+
+        # Campos de entrada y botón "Crear"
+        Label(form_frame, text="Nombre del perfil:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).pack(pady=5)
+        Entry(form_frame, width=30, bg="#F7F7F7", bd=1, relief="solid", textvariable=nombre).pack(pady=5)
+
+        Label(form_frame, text="Tipo de perfil:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).pack(pady=5)
+        ttk.Combobox(form_frame, values=[True, False], textvariable=tipo).pack(pady=5)
+
+        Button(
+            form_frame,
+            text="Crear Perfil",
+            command=lambda: crearYActualizar(nombre.get(), tipo.get(), idUsuario),
+            bg="#4CAF50",
+            fg="#FFFFFF",
+            font=("Arial", 10),
+            relief="flat",
+        ).pack(pady=10)
+
+    def crearYActualizar(nombre, tipo, idUsuario):
+        # Ejecutar la función de creación de perfil
+        if crearPerfil:
+            crearPerfil(nombre, tipo, idUsuario)
+
+        # Ocultar el formulario y recargar los perfiles
+        form_frame.pack_forget()
+        recargar_perfiles()
+
+    def recargar_perfiles():
+        # Limpiar el frame de perfiles y volver a cargar los elementos
+        for widget in profiles_frame.winfo_children():
+            widget.destroy()
+
+        # Volver a agregar perfiles
+        for i, perfil in enumerate(listaPer):
+            Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
+            Button(
+                profiles_frame,
+                text="Ingresar",
+                command=lambda p=perfil: servicio(p),
+                bg="#4CAF50",
+                fg="#FFFFFF",
+                font=("Arial", 10),
+                relief="flat",
+                width=10,
+            ).grid(row=i, column=1, padx=10, pady=5)
+
+        # Si hay menos de 7 perfiles, mostrar el botón "Nuevo Perfil"
+        if len(listaPer) < 7:
+            Button(
+                profiles_frame,
+                text="Nuevo Perfil",
+                command=lambda id=listaPer[0][3]: nuevoPer(id),
+                bg="#FFFFFF",
+                fg="#000000",
+                font=("Arial", 10),
+            ).grid(row=len(listaPer), column=0, columnspan=2, pady=10)
+
+        # Actualizar el canvas
+        profiles_frame.update_idletasks()
+        canvas.configure(scrollregion=canvas.bbox("all"))
+
+    # Inicialmente cargar los perfiles
+    recargar_perfiles()
+
     return f
 ####FRAME DONDE SE MUESTRA LOS PERFILES ASOCIADOS A ESE USUARIO###############################################################
+
 
 ####FRAME PARA LA CREACIÓN DE UN NUEVO USUARIO################################################################################
 def frame_nuevacuenta(root, verificar):
@@ -114,8 +191,9 @@ def frame_nuevacontra(root, usuario, nuevacontra):
     return f
 ####FRAME PARA CAMBIAR LA CONTRASEÑA DE UN USUARIO YA EXISTENTE###############################################################
 
+
 ####FRAME QUE MUESTRA EL CONTINUAR VIENDO, NOVEDADES Y BARRA DE BUSQUEDA DE LOS PERFILES######################################
-def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = "", vermultimedia=None):
+def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "", vermultimedia=None):
     root.geometry("450x700")
     f = Frame(root, bg="#FFFFFF", width=450, height=600)
     f.grid_propagate(False)
@@ -129,11 +207,12 @@ def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = "", vermulti
         if seleccion:
             indice = seleccion[0]
             valor = listaBus.get(indice)
-            print(valor)
+            vermultimedia(valor)
 
-    def obtener_resultados(texto):
+
+    def obtener_resultados(texto, TipoPer):
         listaBus.delete(0,END)
-        resultados = busq(texto)
+        resultados = busq(texto, TipoPer)
         for elem in resultados:
             listaBus.insert(END, elem[1])
         listaBus.bind('<<ListboxSelect>>', callback)
@@ -143,7 +222,7 @@ def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = "", vermulti
     busqueda = Entry(f, width=40, bg="#F7F7F7", bd=1, relief="solid")
     busqueda.grid(row=1, column=0, padx=10, pady=10, sticky="w")
 
-    botonBuscar = Button(f, text= "Buscar", command= lambda: obtener_resultados(busqueda.get()), bg="#2A2D43", fg= "#000000" ,font=("Arial", 10),relief="flat", width=8)
+    botonBuscar = Button(f, text= "Buscar", command= lambda: obtener_resultados(busqueda.get(), TipoPer), bg="#2A2D43", fg= "#000000" ,font=("Arial", 10),relief="flat", width=8)
     botonBuscar.grid(row=1, column=1, padx=5, pady=10, sticky="e")
 
     #listbox con scrollbar
