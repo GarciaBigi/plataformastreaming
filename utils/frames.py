@@ -83,21 +83,14 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
         Label(form_frame, text="Tipo de perfil:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).pack(pady=5)
         ttk.Combobox(form_frame, values=[True, False], textvariable=tipo).pack(pady=5)
 
-        Button(
-            form_frame,
-            text="Crear Perfil",
-            command=lambda: crearYActualizar(nombre.get(), tipo.get(), idUsuario),
-            bg="#4CAF50",
-            fg="#FFFFFF",
-            font=("Arial", 10),
-            relief="flat",
-        ).pack(pady=10)
+        Button(form_frame,text="Crear Perfil",command=lambda: crearYActualizar(nombre.get(), tipo.get(), idUsuario),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",).pack(pady=10)
+        recargar_perfiles()
 
+    
     def crearYActualizar(nombre, tipo, idUsuario):
         # Ejecutar la función de creación de perfil
         if crearPerfil:
             crearPerfil(nombre, tipo, idUsuario)
-
         # Ocultar el formulario y recargar los perfiles
         form_frame.pack_forget()
         recargar_perfiles()
@@ -110,28 +103,11 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
         # Volver a agregar perfiles
         for i, perfil in enumerate(listaPer):
             Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
-            Button(
-                profiles_frame,
-                text="Ingresar",
-                command=lambda p=perfil: servicio(p),
-                bg="#4CAF50",
-                fg="#FFFFFF",
-                font=("Arial", 10),
-                relief="flat",
-                width=10,
-            ).grid(row=i, column=1, padx=10, pady=5)
+            Button(profiles_frame,text="Ingresar",command=lambda p=perfil: servicio(p),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",width=10,).grid(row=i, column=1, padx=10, pady=5)
 
         # Si hay menos de 7 perfiles, mostrar el botón "Nuevo Perfil"
         if len(listaPer) < 7:
-            Button(
-                profiles_frame,
-                text="Nuevo Perfil",
-                command=lambda id=listaPer[0][3]: nuevoPer(id),
-                bg="#FFFFFF",
-                fg="#000000",
-                font=("Arial", 10),
-            ).grid(row=len(listaPer), column=0, columnspan=2, pady=10)
-
+            Button(profiles_frame,text="Nuevo Perfil",command=lambda id=listaPer[0][3]: nuevoPer(id),bg="#FFFFFF",fg="#000000",font=("Arial", 10),).grid(row=len(listaPer), column=0, columnspan=2, pady=10)
         # Actualizar el canvas
         profiles_frame.update_idletasks()
         canvas.configure(scrollregion=canvas.bbox("all"))
