@@ -2,6 +2,12 @@ import mysql.connector
 from utils.consultas import * 
 from utils.frames import *
 import tkinter as tk
+
+usuario_actual_id = None
+def set_usuario_actual(usuario_id):
+    global usuario_actual_id
+    usuario_actual_id = usuario_id
+
 #CAMBIAR FRAMES
 def mostrar_frame(frame):
     global frameactual
@@ -24,6 +30,7 @@ def autenticacion(correo, contraseña):
                     print("Correcto")
                     ins_intento(cursor, True, usuarios[0][0])
                     cnx.commit()
+                    set_usuario_actual(usuarios[0][0])
                     listaPer = obtener_perfiles(usuarios[0][0])
                     frame = frame_perfiles(root, listaPer, servicio)
                     mostrar_frame(frame)
@@ -38,7 +45,7 @@ def autenticacion(correo, contraseña):
             print(f"Error: {err}")
         finally:
             cursor.close()      
-#PARA NUEVA CREACION DE PERFILES
+#PARA NUEVA CREACION DE Usuarios
 def creacion():
     frame=frame_nuevacuenta(root,verificacion)
     mostrar_frame(frame)
@@ -94,7 +101,7 @@ def servicio(perfil):
         try: 
             listaContinuar = continuar_viendo(cursor, perfil[1])
             listaNovedades = novedades(cursor)
-            frame=frame_plataforma(root, listaContinuar,listaNovedades, busq=busq)
+            frame=frame_plataforma(root, listaContinuar,listaNovedades, busq=busq, vermultimedia=vermultimedia)
             mostrar_frame(frame)
         except mysql.connector.Error as err:
             cnx.rollback()
@@ -113,16 +120,65 @@ def busq(texto):
             print(f"Error: {err}")
         finally:
             cursor.close()
+#Multimedias especificas
+def vermultimedia(titulo):
+    if cnx.is_connected:
+        cursor=cnx.cursor()
+        try:
+            print(titulo)
+            id = con_idmultimedia(cursor, titulo)
+            multimedia= con_multimediafull(cursor,id)
+            equipo= con_equipo(cursor,id)
+            frame=frame_multimedia(root,multimedia=multimedia,equipo=equipo)
+            mostrar_frame(frame)
+            print(id)
+            print(multimedia)
+            print(equipo)
+        except mysql.connector.Error as err:
+            cnx.rollback()
+            print(f"Error: {err}")
+        finally:
+            cursor.close()
 
 
 #############COMIENZA CODIGO###########################################################################################
+def ir_cambiar_usuario():
+    global usuario_actual_id
+    usuario_actual_id = None
+    frame = frame_ingreso(root, autenticacion)
+    mostrar_frame(frame)
 
+def ir_elegir_perfil():
+    global usuario_actual_id
+    if usuario_actual_id is not None:
+        try:
+            cursor = cnx.cursor()
+            listaPer = obtener_perfiles(usuario_actual_id)
+            frame = frame_perfiles(root, listaPer, servicio)
+            mostrar_frame(frame)
+        except mysql.connector.Error as err:
+            cnx.rollback()
+            print(f"Error: {err}")
+        finally:
+            cursor.close()
+    else:
+        print("Error: No se ha establecido un usuario actual.")
 #Ventana principal
 root=tk.Tk()
 root.title("Plataforma Streaming")
-root.geometry("450x600")
+root.geometry("450x700")
 frameactual=None
 root.configure(bg = "#292F36")
+
+# Menú principal
+menu_bar = tk.Menu(root)
+root.config(menu=menu_bar)
+
+menu_opciones = tk.Menu(menu_bar, tearoff=0)
+menu_opciones.add_command(label="Cambiar Usuario", command=ir_cambiar_usuario)
+menu_opciones.add_command(label="Elegir Perfil", command=ir_elegir_perfil)
+
+menu_bar.add_cascade(label="Opciones", menu=menu_opciones)
 
 # Datos de conexión a la base de datos
 config = {

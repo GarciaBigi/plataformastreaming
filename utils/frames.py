@@ -96,7 +96,7 @@ def frame_nuevacontra(root, usuario, nuevacontra):
 
     return f
 
-def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = ""):
+def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = "", vermultimedia=None):
     f = Frame(root, bg="#FFFFFF", width=450, height=600)
     f.grid_propagate(False)
 
@@ -104,7 +104,6 @@ def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = ""):
     titulo = Label(f,text="Bienvenido a la plataforma",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",)
     titulo.grid(row=0, column=0, columnspan=2, pady=10)
     #Buscador
-
     def callback(event):
         seleccion = listaBus.curselection()
         if seleccion:
@@ -159,7 +158,7 @@ def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = ""):
         item_frame.pack(side="left", padx=10, pady=5)
 
         Label(item_frame, text=f"Titulo: {elem[1]}, Visto: {elem[2]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10), wraplength=200, justify="left").pack()
-        Button(item_frame, text="Mirar", command=lambda titulo=elem[1]: print(f"Título seleccionado: {titulo}"), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15, height=1).pack(pady=5)
+        Button(item_frame, text="Mirar", command=lambda t=elem[1]: vermultimedia(t), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15, height=1).pack(pady=5)
 
     content_continuar.update_idletasks()
     canvas_continuar.configure(scrollregion=canvas_continuar.bbox("all"))
@@ -185,7 +184,7 @@ def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = ""):
         item_frame.pack(side="left", padx=10, pady=5)
 
         Label(item_frame, text=f"{elem[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10), wraplength=200, justify="left").pack()
-        Button(item_frame, text="Mirar", command=lambda titulo=elem[0]: print(f"Título seleccionado: {titulo}"), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15, height=1).pack(pady=5)
+        Button(item_frame, text="Mirar", command=lambda t=elem[0]: vermultimedia(t) , bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15, height=1).pack(pady=5)
 
     content_novedades.update_idletasks()
     canvas_novedades.configure(scrollregion=canvas_novedades.bbox("all"))
@@ -194,30 +193,54 @@ def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = ""):
     return f
 
 def frame_multimedia(root, multimedia=[], equipo=[]):
-    f=Frame(root)
+    f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
-    #MULTIMEDIA
-    titulo=multimedia[0]
-    plot=multimedia[1]
-    valoracion=multimedia[2]
-    atp=multimedia[3]
-    genero=multimedia[4]
-    fecha_lanzamiento=multimedia[5]
-    duracion=multimedia[6]
+
+    # MULTIMEDIA
+    titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion = multimedia
+
+    # Título principal
+    Label(f, text="Información de Multimedia", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
+
+    # Información principal de la multimedia
+    info_frame = Frame(f, bg="#F7F7F7", relief="solid", bd=1, padx=10, pady=10)
+    info_frame.pack(fill="x", padx=10, pady=10)
+
+    Label(info_frame, text=f"Título: {titulo}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=5)
+    Label(info_frame, text=f"Plot: {plot}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w", wraplength=400, justify="left").pack(fill="x", pady=5)
+    Label(info_frame, text=f"Valoración: {valoracion}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=5)
+    Label(info_frame, text=f"ATP: {'Sí' if atp else 'No'}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=5)
+    Label(info_frame, text=f"Género: {genero}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=5)
+    Label(info_frame, text=f"Fecha de lanzamiento: {fecha_lanzamiento}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=5)
+    Label(info_frame, text=f"Duración: {duracion} minutos", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=5)
+
+    # EQUIPO DE PRODUCCIÓN
+    Label(f, text="Equipo de Producción", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
+
+    equipo_frame = Frame(f, bg="#FFFFFF", width=450, height=150)
+    equipo_frame.pack(pady=5)
+
+    canvas_equipo = Canvas(equipo_frame, bg="#FFFFFF", width=450, height=150, highlightthickness=0)
+    scrollbar_equipo = Scrollbar(equipo_frame, orient="horizontal", command=canvas_equipo.xview)
+    content_equipo = Frame(canvas_equipo, bg="#FFFFFF")
+
+    canvas_equipo.configure(xscrollcommand=scrollbar_equipo.set)
+    canvas_equipo.pack(side="top", fill="both", expand=True)
+    scrollbar_equipo.pack(side="bottom", fill="x")
+
+    canvas_equipo.create_window((0, 0), window=content_equipo, anchor="nw")
+
+    for miembro in equipo:
+        miembro_frame = Frame(content_equipo, bg="#F7F7F7", relief="solid", bd=1, padx=10, pady=10)
+        miembro_frame.pack(side="left", padx=10, pady=10)
+
+        Label(miembro_frame, text=f"Nombre: {miembro[0]}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=2)
+        Label(miembro_frame, text=f"Apellido: {miembro[1]}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=2)
+        Label(miembro_frame, text=f"Rol: {miembro[2]}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=2)
+
+    content_equipo.update_idletasks()
+    canvas_equipo.configure(scrollregion=canvas_equipo.bbox("all"))
     
-    Label(f, text=f"Titulo: {titulo}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
-    Label(f, text=f"Plot: {plot}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
-    Label(f, text=f"Valoracion: {valoracion}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
-    Label(f, text=f"ATP: {atp}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
-    Label(f, text=f"Genero: {genero}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
-    Label(f, text=f"Fecha de lanzamiento: {fecha_lanzamiento}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
-    Label(f, text=f"Duración: {duracion}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
-
-    i=0
-    for elem in equipo:
-        for j in equipo[i]:
-            Label(f, text=f"Nombre: {equipo[i][j]}", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
-            j+=1
-        i+=1
-
+    f.pack(fill="both", expand=True)
     return f
+

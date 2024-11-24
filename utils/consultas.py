@@ -104,3 +104,33 @@ def buscarInfoTi(cursor, titulo):
     cursor.execute(consultaInfo, (titulo,))
     listaInfo = cursor.fetchall()
     return listaInfo
+
+def con_idmultimedia(cursor,titulo):
+    consultarid="""
+    select m.id_multimedia 
+    from multimedias m 
+    where m.titulo = %s
+    """
+    cursor.execute(consultarid,(titulo,))
+    id=cursor.fetchall()[0][0]
+    return id
+
+def con_multimediafull(cursor,id):
+    consultafull="""
+    select titulo ,plot ,valoracion , atp, genero ,fecha_lanzamiento ,duracion 
+    from multimedias m 
+    where m.id_multimedia = %s
+    """
+    cursor.execute(consultafull,(id,))
+    multimedia=cursor.fetchall()[0]
+    return multimedia
+
+def con_equipo(cursor,id):
+    consultaequipo="""
+    select a.nombre ,a.apellido , ep.rol 
+    from multimedias m natural join equipo_produccion ep natural join artistas a 
+    where m.id_multimedia = %s
+    """
+    cursor.execute(consultaequipo,(id,))
+    equipo=cursor.fetchall()
+    return equipo
