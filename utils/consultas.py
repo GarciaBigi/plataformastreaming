@@ -1,4 +1,5 @@
 from datetime import *
+#Todas las consultas SQL utilizadas
 def con_usuarios(cursor, correo):
     consultaUsuario = f"""
     select *
@@ -134,3 +135,21 @@ def con_equipo(cursor,id):
     cursor.execute(consultaequipo,(id,))
     equipo=cursor.fetchall()
     return equipo
+
+def upd_mirar(cursor, id_titulo, id_perfil, visto, calificacion):
+    upd_mirar = """
+    UPDATE miro
+    SET porcentaje_visto = %s, valoracion = %s
+    WHERE id_perfil = %s AND id_multimedia = %s;
+    """
+    cursor.execute(upd_mirar, (visto, float(calificacion), id_perfil, id_titulo))
+
+def con_vistoycalif(cursor,id_perfil, id_multimedia):
+    consultavaloracion="""
+    select m.porcentaje_visto , m.valoracion 
+    from miro m 
+    where m.id_perfil = %s and m.id_multimedia = %s
+    """
+    cursor.execute(consultavaloracion,(id_perfil,id_multimedia))
+    relacion=cursor.fetchall()
+    return relacion

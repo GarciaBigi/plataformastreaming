@@ -2,9 +2,21 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
+#Esta util se encarga de hacer los frames especificos para cada momento del programa
+#Para lo mismo a todos los frames se le ingresa el root desde donde seran creados y datos de acurdo a lo que debera mostrar ese frame
+#Luego se utilizan herramientas esteticas de la libreria tkinter para tener una interfaz grafica más sensilla
+#Labels: son carteles que muestran el mensaje que halla en el parametro text=
+#Entry: cuadros donde se pueden ingresar datos, el metodo .get() obtiene los datos ingresados
+#Button: boton con el cual se llama cierta funcion en su parametro command= estos son la base de la comunicación entre el main y esta util
+#ya que es posible utilizar funciones lambda para invocar funciones que hallan sido pasadas como objetos en los parametros de la función
+#Canvas: es un widget que permite dibujar y manejar gráficos y otros elementos visuales, como si fuera un area de dibujo
+#Scrollbar: son barras deslizantes para mostrar varios elementos de un canvas o frame
+#Todos estos elementos tienen el atributo .pack() o .grid() , los cuales los apilan uno sobre otros o los ponene en cierta posicion de una grilla respectivamente
+#Es importante analizar que siempre se retorna el frame, esto ya que el main es el encargado de poner o no los frames, este archivo es unicamente para diseño de interfaz
 
-
+####FRAME DONDE SE INGRESA USUARIO Y CONTRASEÑA###############################################################################
 def frame_ingreso(root, autenticacion,*,creacion=None, cambiocontra=None, nuevacreacion=False, nuevacontrasena=(False,"")):
+    root.geometry("450x450")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
     
@@ -25,9 +37,11 @@ def frame_ingreso(root, autenticacion,*,creacion=None, cambiocontra=None, nuevac
     if nuevacontrasena[0]:
         Button(f, text="¿Olvidaste la contraseña?", command=lambda: cambiocontra(nuevacontrasena[1]),bg="#FFFFFF", fg="#4CAF50", font=("Arial", 10, "underline"), relief="flat").grid(row=5, column=1, pady=10)
     return f
+####FRAME DONDE SE INGRESA USUARIO Y CONTRASEÑA###############################################################################
 
-
+####FRAME DONDE SE MUESTRA LOS PERFILES ASOCIADOS A ESE USUARIO###############################################################
 def frame_perfiles(root, listaPer,servicio):
+    root.geometry("450x450")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
     
@@ -50,11 +64,11 @@ def frame_perfiles(root, listaPer,servicio):
     scrollbar.pack(side="right", fill="y")
     
     return f
+####FRAME DONDE SE MUESTRA LOS PERFILES ASOCIADOS A ESE USUARIO###############################################################
 
-
-
-
+####FRAME PARA LA CREACIÓN DE UN NUEVO USUARIO################################################################################
 def frame_nuevacuenta(root, verificar):
+    root.geometry("450x450")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
     
@@ -75,8 +89,11 @@ def frame_nuevacuenta(root, verificar):
     Button(f, text="Crear Cuenta", command=lambda: verificar(nuevoUsuario.get(), nuevaContra1.get()),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15).grid(row=4, column=0, columnspan=2, pady=20)
     
     return f
+####FRAME PARA LA CREACIÓN DE UN NUEVO USUARIO################################################################################
 
+####FRAME PARA CAMBIAR LA CONTRASEÑA DE UN USUARIO YA EXISTENTE###############################################################
 def frame_nuevacontra(root, usuario, nuevacontra):
+    root.geometry("450x450")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
 
@@ -95,8 +112,11 @@ def frame_nuevacontra(root, usuario, nuevacontra):
     Button(f, text="Confirmar", command=lambda: nuevacontra(usuario,nuevaContra1.get(),),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"),relief="flat", width=15, height=1).grid(row=4, column=0, columnspan=2, pady=20)
 
     return f
+####FRAME PARA CAMBIAR LA CONTRASEÑA DE UN USUARIO YA EXISTENTE###############################################################
 
+####FRAME QUE MUESTRA EL CONTINUAR VIENDO, NOVEDADES Y BARRA DE BUSQUEDA DE LOS PERFILES######################################
 def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = "", vermultimedia=None):
+    root.geometry("450x700")
     f = Frame(root, bg="#FFFFFF", width=450, height=600)
     f.grid_propagate(False)
 
@@ -191,8 +211,11 @@ def frame_plataforma(root, listaContinuar, listaNovedades, *,busq = "", vermulti
 
     f.pack(fill="both", expand=True)
     return f
+####FRAME QUE MUESTRA EL CONTINUAR VIENDO, NOVEDADES Y BARRA DE BUSQUEDA DE LOS PERFILES######################################
 
-def frame_multimedia(root, multimedia=[], equipo=[]):
+####FRAME QUE MUESTRA LOS DATOS ESPECIFICOS DE LA MULTIMEDIA SELECCIONADA Y SU EQUIPO DE PRODUCCIÓN###########################
+def frame_multimedia(root, *, visto="" ,calificacion="" ,mirarmultimedia=None, multimedia=[], equipo=[]):
+    root.geometry("450x700")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
 
@@ -230,6 +253,7 @@ def frame_multimedia(root, multimedia=[], equipo=[]):
 
     canvas_equipo.create_window((0, 0), window=content_equipo, anchor="nw")
 
+    # Agregar miembros del equipo al contenedor
     for miembro in equipo:
         miembro_frame = Frame(content_equipo, bg="#F7F7F7", relief="solid", bd=1, padx=10, pady=10)
         miembro_frame.pack(side="left", padx=10, pady=10)
@@ -238,9 +262,33 @@ def frame_multimedia(root, multimedia=[], equipo=[]):
         Label(miembro_frame, text=f"Apellido: {miembro[1]}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=2)
         Label(miembro_frame, text=f"Rol: {miembro[2]}", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").pack(fill="x", pady=2)
 
+    # Actualizar región desplazable
     content_equipo.update_idletasks()
     canvas_equipo.configure(scrollregion=canvas_equipo.bbox("all"))
-    
+    # VER
+    ver_frame = Frame(f, bg="#FFFFFF")  # Sin tamaño fijo
+    ver_frame.pack(pady=10)
+
+    canvas_ver = Canvas(ver_frame, bg="#FFFFFF", highlightthickness=0)  # Sin tamaño fijo
+    content_ver = Frame(canvas_ver, bg="#FFFFFF")
+
+    # Configura el canvas
+    canvas_ver.pack(fill="both", expand=True)
+    canvas_ver.create_window((0, 0), window=content_ver, anchor="nw")
+
+    Label(content_ver, text=f"Porcentaje para ver (ya vistos: {visto}):", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").grid(row=0, column=0, padx=10, pady=5, sticky="w")
+    vista = Entry(content_ver, width=10, bg="#F7F7F7", bd=1, relief="solid")
+    vista.grid(row=0, column=1, padx=10, pady=5, sticky="w")
+
+    Label(content_ver, text=f"Calificación personal entre 1 y 5 (actual: {calificacion}):", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    calif = Entry(content_ver, width=10, bg="#F7F7F7", bd=1, relief="solid")
+    calif.grid(row=1, column=1, padx=10, pady=5, sticky="w")
+
+    Button(content_ver, text="Ver", command=lambda: mirarmultimedia(titulo,vista.get(),calif.get()), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat").grid(row=2, column=0, columnspan=2, pady=10)
+
+    content_ver.update_idletasks()
+    canvas_ver.configure(scrollregion=canvas_ver.bbox("all"))
+
     f.pack(fill="both", expand=True)
     return f
-
+####FRAME QUE MUESTRA LOS DATOS ESPECIFICOS DE LA MULTIMEDIA SELECCIONADA Y SU EQUIPO DE PRODUCCIÓN###########################
