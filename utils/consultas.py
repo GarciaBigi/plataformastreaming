@@ -21,13 +21,20 @@ def ins_intento(cursor, estado, id):
 
 def con_perfiles(cursor, idUsuario):
     consultaPerfiles = """
-    select nombre,id_perfil 
+    select nombre,id_perfil,p.tipo, u.id_usuario 
     from perfiles p, usuarios u 
     where u.id_usuario = p.id_usuario and u.id_usuario = %s;
     """
     cursor.execute(consultaPerfiles,(idUsuario,))
     filaPer = cursor.fetchall()
     return filaPer
+
+def insert_perfil(cursor, nombre, tipo, id):
+    insertarPerfil = """
+    Insert into perfiles(nombre, tipo, id_usuario)
+    Values(%s,%s,%s);
+    """
+    cursor.execute(insertarPerfil, (nombre, tipo, id))
 
 def insert_usuario(cursor,correo,contrasena):
     insertarUsuario= """
@@ -74,6 +81,18 @@ def novedades(cursor):
     listaNovedades = cursor.fetchall()
     return listaNovedades
 
+def novedadesFil(cursor, atp):
+    consultaNovedades= """
+    select m.titulo, m.id_multimedia 
+    from multimedias m, perfiles p 
+    where m.atp = %s 
+    order by m.fecha_agregacion desc
+    limit 5
+    """
+    cursor.execute(consultaNovedades, (atp,))
+    listaNovedadesFil = cursor.fetchall()
+    return listaNovedadesFil
+
 def buscarTitulo(cursor, string):
     consultaBuscar = """
     select id_multimedia, titulo
@@ -82,6 +101,17 @@ def buscarTitulo(cursor, string):
     """
     string_aux = f"%{string}%"
     cursor.execute(consultaBuscar, (string_aux,))
+    listaBuscar = cursor.fetchall()
+    return listaBuscar
+
+def buscarTituloFil(cursor,string,atp):
+    consultaBuscar = """
+    select id_multimedia, titulo
+    from multimedias m
+    where titulo like %s and m.atp = %s
+    """
+    string_aux = f"%{string}%"
+    cursor.execute(consultaBuscar,(string_aux,atp))
     listaBuscar = cursor.fetchall()
     return listaBuscar
 

@@ -32,7 +32,7 @@ def autenticacion(correo, contraseña):
                     cnx.commit()
                     set_usuario_actual(usuarios[0][0])
                     listaPer = obtener_perfiles(usuarios[0][0])
-                    frame = frame_perfiles(root, listaPer, servicio)
+                    frame = frame_perfiles(root, listaPer, servicio, crearPerfil= crearPerfil)
                     mostrar_frame(frame)
                 else:
                     print("Incorrecto")
@@ -94,14 +94,30 @@ def obtener_perfiles(idUsuario):
         finally:
             cursor.close()
 
+def crearPerfil(nombre,tipo,id):
+    if cnx.is_connected:
+        cursor = cnx.cursor()
+        try:
+            insert_perfil(cursor, nombre, tipo, id)
+            cnx.commit()
+        except mysql.connector.Error as err:
+            cnx.rollback()
+            print(f"Error: {err}")
+        finally:
+            cursor.close()
+
 #PLATAFORMA STREAMING
 def servicio(perfil):
     if cnx.is_connected():
         cursor=cnx.cursor()
         try: 
             listaContinuar = continuar_viendo(cursor, perfil[1])
-            listaNovedades = novedades(cursor)
-            frame=frame_plataforma(root, listaContinuar,listaNovedades, busq=busq, vermultimedia=vermultimedia)
+            if perfil[2] == True:
+                listaNovedades = novedadesFil(cursor,perfil[2])
+            else:
+                listaNovedades = novedades(cursor)
+            
+            frame=frame_plataforma(root, listaContinuar,listaNovedades, perfil[2], busq=busq, vermultimedia=vermultimedia)
             mostrar_frame(frame)
         except mysql.connector.Error as err:
             cnx.rollback()
@@ -109,17 +125,21 @@ def servicio(perfil):
         finally:
             cursor.close()
 
-def busq(texto):
+def busq(texto, TipoPer):
     if cnx.is_connected:
         cursor=cnx.cursor()
         try:
-            listaBusqueda = buscarTitulo(cursor, texto)
+            if TipoPer == False:
+                listaBusqueda = buscarTitulo(cursor, texto)
+            else:
+                listaBusqueda = buscarTituloFil(cursor, texto, TipoPer)
             return listaBusqueda
         except mysql.connector.Error as err:
             cnx.rollback()
             print(f"Error: {err}")
         finally:
             cursor.close()
+
 #Multimedias especificas
 def vermultimedia(titulo):
     if cnx.is_connected:
