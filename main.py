@@ -97,12 +97,15 @@ def obtener_perfiles(idUsuario):
         finally:
             cursor.close()
 
-def crearPerfil(nombre,tipo,id):
+def crearPerfil(nombre,tipo,id, servicio):
     if cnx.is_connected:
         cursor = cnx.cursor()
         try:
             insert_perfil(cursor, nombre, tipo, id)
             cnx.commit()
+            listaPer = obtener_perfiles(id)
+            frame = frame_perfiles(root, listaPer, servicio, crearPerfil= crearPerfil)
+            mostrar_frame(frame)
         except mysql.connector.Error as err:
             cnx.rollback()
             print(f"Error: {err}")

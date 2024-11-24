@@ -83,14 +83,15 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
         Label(form_frame, text="Tipo de perfil:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).pack(pady=5)
         ttk.Combobox(form_frame, values=[True, False], textvariable=tipo).pack(pady=5)
 
-        Button(form_frame,text="Crear Perfil",command=lambda: crearYActualizar(nombre.get(), tipo.get(), idUsuario),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",).pack(pady=10)
+        if len(listaPer) < 6:
+            Button(form_frame,text="Crear Perfil",command=lambda: crearYActualizar(nombre.get(), tipo.get(), idUsuario),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",).pack(pady=10)
         recargar_perfiles()
 
     
     def crearYActualizar(nombre, tipo, idUsuario):
         # Ejecutar la función de creación de perfil
         if crearPerfil:
-            crearPerfil(nombre, tipo, idUsuario)
+            crearPerfil(nombre, tipo, idUsuario, servicio)
         # Ocultar el formulario y recargar los perfiles
         form_frame.pack_forget()
         recargar_perfiles()
