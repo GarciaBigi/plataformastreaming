@@ -81,40 +81,28 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
         Entry(form_frame, width=30, bg="#F7F7F7", bd=1, relief="solid", textvariable=nombre).pack(pady=5)
 
         Label(form_frame, text="Tipo de perfil:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).pack(pady=5)
-        ttk.Combobox(form_frame, values=[True, False], textvariable=tipo).pack(pady=5)
+        ttk.Combobox(form_frame, values=["Infantil", "Adulto"], textvariable=tipo).pack(pady=5)
+        tipoBool = {"Infantil": True, "Adulto": False}
 
-        if len(listaPer) < 6:
-            Button(form_frame,text="Crear Perfil",command=lambda: crearYActualizar(nombre.get(), tipo.get(), idUsuario),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",).pack(pady=10)
-        recargar_perfiles()
+        if len(listaPer) <= 6:
+            Button(form_frame,text="Crear Perfil",command=lambda: crearYActualizar(nombre.get(), tipoBool[tipo.get()], idUsuario),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",).pack(pady=10)
 
-    
     def crearYActualizar(nombre, tipo, idUsuario):
         # Ejecutar la función de creación de perfil
         if crearPerfil:
-            crearPerfil(nombre, tipo, idUsuario, servicio)
-        # Ocultar el formulario y recargar los perfiles
-        form_frame.pack_forget()
-        recargar_perfiles()
-
-    def recargar_perfiles():
-        # Limpiar el frame de perfiles y volver a cargar los elementos
-        for widget in profiles_frame.winfo_children():
-            widget.destroy()
+            crearPerfil(nombre, tipo, idUsuario,servicio)
 
         # Volver a agregar perfiles
-        for i, perfil in enumerate(listaPer):
-            Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
-            Button(profiles_frame,text="Ingresar",command=lambda p=perfil: servicio(p),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",width=10,).grid(row=i, column=1, padx=10, pady=5)
+    for i, perfil in enumerate(listaPer):
+        Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
+        Button(profiles_frame,text="Ingresar",command=lambda p=perfil: servicio(p),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",width=10,).grid(row=i, column=1, padx=10, pady=5)
 
-        # Si hay menos de 7 perfiles, mostrar el botón "Nuevo Perfil"
-        if len(listaPer) < 7:
-            Button(profiles_frame,text="Nuevo Perfil",command=lambda id=listaPer[0][3]: nuevoPer(id),bg="#FFFFFF",fg="#000000",font=("Arial", 10),).grid(row=len(listaPer), column=0, columnspan=2, pady=10)
-        # Actualizar el canvas
-        profiles_frame.update_idletasks()
-        canvas.configure(scrollregion=canvas.bbox("all"))
-
-    # Inicialmente cargar los perfiles
-    recargar_perfiles()
+       # Si hay menos de 7 perfiles, mostrar el botón "Nuevo Perfil"
+    if len(listaPer) < 7:
+        Button(profiles_frame,text="Nuevo Perfil",command=lambda id=listaPer[0][3]: nuevoPer(id),bg="#FFFFFF",fg="#000000",font=("Arial", 10),).grid(row=len(listaPer), column=0, columnspan=2, pady=10)
+    # Actualizar el canvas
+    profiles_frame.update_idletasks()
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
     return f
 ####FRAME DONDE SE MUESTRA LOS PERFILES ASOCIADOS A ESE USUARIO###############################################################

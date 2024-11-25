@@ -97,7 +97,7 @@ def obtener_perfiles(idUsuario):
         finally:
             cursor.close()
 
-def crearPerfil(nombre,tipo,id, servicio):
+def crearPerfil(nombre,tipo,id,servicio):
     if cnx.is_connected:
         cursor = cnx.cursor()
         try:
