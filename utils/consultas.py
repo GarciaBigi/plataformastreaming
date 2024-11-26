@@ -9,6 +9,7 @@ def con_usuarios(cursor, correo):
     cursor.execute(consultaUsuario)
     filaUsuario = cursor.fetchall()
     return filaUsuario
+
 def ins_intento(cursor, estado, id):
     d=datetime.now()
     fecha=d.strftime("%Y-%m-%d")
@@ -173,6 +174,13 @@ def upd_mirar(cursor, id_titulo, id_perfil, visto, calificacion):
     WHERE id_perfil = %s AND id_multimedia = %s;
     """
     cursor.execute(upd_mirar, (visto, float(calificacion), id_perfil, id_titulo))
+
+def ins_mirar(cursor, id_titulo, id_perfil, visto, calificacion):
+    ins_mira="""
+    Insert into miro(id_perfil,id_multimedia,porcentaje_visto,valoracion)
+    values (%s,%s,%s,%s)
+    """
+    cursor.execute(ins_mira,(id_perfil,id_titulo,visto, float(calificacion)))
 
 def con_vistoycalif(cursor,id_perfil, id_multimedia):
     consultavaloracion="""

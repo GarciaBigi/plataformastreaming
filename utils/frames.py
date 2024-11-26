@@ -327,8 +327,13 @@ def frame_multimedia(root, *, visto="" ,calificacion="" ,mirarmultimedia=None, m
     Label(content_ver, text=f"Calificación personal entre 1 y 5 (actual: {calificacion}):", bg="#F7F7F7", fg="#000000", font=("Arial", 10), anchor="w").grid(row=1, column=0, padx=10, pady=5, sticky="w")
     calif = Entry(content_ver, width=10, bg="#F7F7F7", bd=1, relief="solid")
     calif.grid(row=1, column=1, padx=10, pady=5, sticky="w")
+    
+    if visto=="0":
+        firstime=True
+    else:
+        firstime=False
 
-    Button(content_ver, text="Ver", command=lambda: mirarmultimedia(titulo,vista.get(),calif.get()), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat").grid(row=2, column=0, columnspan=2, pady=10)
+    Button(content_ver, text="Ver", command=lambda: mirarmultimedia(titulo,vista.get(),calif.get(),firstime), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat").grid(row=2, column=0, columnspan=2, pady=10)
 
     content_ver.update_idletasks()
     canvas_ver.configure(scrollregion=canvas_ver.bbox("all"))
