@@ -84,7 +84,7 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
         ttk.Combobox(form_frame, values=["Infantil", "Adulto"], textvariable=tipo).pack(pady=5)
         tipoBool = {"Infantil": True, "Adulto": False}
 
-        if len(listaPer) <= 6:
+        if len(listaPer) < 6:
             Button(form_frame,text="Crear Perfil",command=lambda: crearYActualizar(nombre.get(), tipoBool[tipo.get()], idUsuario),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",).pack(pady=10)
 
     def crearYActualizar(nombre, tipo, idUsuario):
@@ -93,12 +93,13 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
             crearPerfil(nombre, tipo, idUsuario,servicio)
 
         # Volver a agregar perfiles
-    for i, perfil in enumerate(listaPer):
-        Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
-        Button(profiles_frame,text="Ingresar",command=lambda p=perfil: servicio(p),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",width=10,).grid(row=i, column=1, padx=10, pady=5)
+    if len(listaPer) != 0:
+        for i, perfil in enumerate(listaPer):
+            Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
+            Button(profiles_frame,text="Ingresar",command=lambda p=perfil: servicio(p),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",width=10,).grid(row=i, column=1, padx=10, pady=5)
 
        # Si hay menos de 6 perfiles, mostrar el botón "Nuevo Perfil"
-    if len(listaPer) < 7:
+    if len(listaPer) < 6:
         Button(profiles_frame,text="Nuevo Perfil",command=lambda id=listaPer[0][3]: nuevoPer(id),bg="#FFFFFF",fg="#000000",font=("Arial", 10),).grid(row=len(listaPer), column=0, columnspan=2, pady=10)
     # Actualizar el canvas
     profiles_frame.update_idletasks()
@@ -124,11 +125,8 @@ def frame_nuevacuenta(root, verificar):
     nuevaContra1 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
     nuevaContra1.grid(row=2, column=1, pady=10, padx=10)
     
-    Label(f, text="Repita nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=3, column=0, pady=10, sticky="e")
-    nuevaContra2 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
-    nuevaContra2.grid(row=3, column=1, pady=10, padx=10)
     #Se invoca la funcion para crear la nueva cuenta
-    Button(f, text="Crear Cuenta", command=lambda: verificar(nuevoUsuario.get(), nuevaContra1.get()),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15).grid(row=4, column=0, columnspan=2, pady=20)
+    Button(f, text="Crear Cuenta", command=lambda: verificar(nuevoUsuario.get(), nuevaContra1.get()),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15).grid(row=3, column=0, columnspan=2, pady=20)
     
     return f
 ####FRAME PARA LA CREACIÓN DE UN NUEVO USUARIO################################################################################
@@ -147,11 +145,8 @@ def frame_nuevacontra(root, usuario, nuevacontra):
     nuevaContra1 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
     nuevaContra1.grid(row=2, column=1, pady=10, padx=10)
 
-    Label(f, text="Repita nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=3, column=0, pady=10, sticky="e", padx=10)
-    nuevaContra2 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
-    nuevaContra2.grid(row=3, column=1, pady=10, padx=10)
     #Se invoca la funcion para cambiar la contraseña
-    Button(f, text="Confirmar", command=lambda: nuevacontra(usuario,nuevaContra1.get(),),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"),relief="flat", width=15, height=1).grid(row=4, column=0, columnspan=2, pady=20)
+    Button(f, text="Confirmar", command=lambda: nuevacontra(usuario,nuevaContra1.get(),),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"),relief="flat", width=15, height=1).grid(row=3, column=0, columnspan=2, pady=20)
 
     return f
 ####FRAME PARA CAMBIAR LA CONTRASEÑA DE UN USUARIO YA EXISTENTE###############################################################
@@ -201,7 +196,7 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
     listaBus.config(yscrollcommand=scrollbarList.set)
 
     # Sección "Continuar viendo"
-    if len(listaContinuar) != 0:
+    if len(listaContinuar) != 0:#La seccion no se muestra si no hay nada para continuar viendo
         Label(f,text="Continuar viendo",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).grid(row=3, column=0, columnspan=2, pady=5)
 
         frame_continuar = Frame(f, bg="#FFFFFF", width=450, height=70)
@@ -222,7 +217,7 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
             item_frame = Frame(content_continuar, bg="#FFFFFF")
             item_frame.pack(side="left", padx=10, pady=5)
 
-            Label(item_frame, text=f"Titulo: {elem[1]}, Visto: {elem[2]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10), wraplength=200, justify="left").pack()
+            Label(item_frame, text=f"Titulo: {elem[1]}, Porcentaje Visto: {elem[2]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10), wraplength=200, justify="left").pack()
             Button(item_frame, text="Mirar", command=lambda t=elem[1]: vermultimedia(t), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15, height=1).pack(pady=5)
 
         content_continuar.update_idletasks()
@@ -260,6 +255,7 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
 
 ####FRAME QUE MUESTRA LOS DATOS ESPECIFICOS DE LA MULTIMEDIA SELECCIONADA Y SU EQUIPO DE PRODUCCIÓN###########################
 def frame_multimedia(root, *, visto="" ,calificacion="" ,mirarmultimedia=None, multimedia=[], equipo=[]):
+    # servicio = None, idPer = None):
     root.geometry("450x700")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
@@ -267,6 +263,7 @@ def frame_multimedia(root, *, visto="" ,calificacion="" ,mirarmultimedia=None, m
     # MULTIMEDIA
     titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion = multimedia
 
+    #Button(f, text="Volver atras",command= lambda : servicio(idPer), bg="#2A2D43", fg= "#000000" ,font=("Arial", 10),relief="flat", width=8).pack(pady = 5)
     # Título principal
     Label(f, text="Información de Multimedia", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
 

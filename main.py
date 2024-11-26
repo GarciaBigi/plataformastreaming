@@ -161,6 +161,7 @@ def vermultimedia(titulo):#Esta función busca el resumen de datos sobre una mul
                 visto="0"
                 calif="0"
             frame=frame_multimedia(root,visto=visto,calificacion=calif,mirarmultimedia=mirar_multimedia,multimedia=multimedia,equipo=equipo)
+            #servicio=servicio, idPer = perfil_actual_id) Ignorar por ahora
             mostrar_frame(frame)
         except mysql.connector.Error as err:
             cnx.rollback()
@@ -171,10 +172,14 @@ def vermultimedia(titulo):#Esta función busca el resumen de datos sobre una mul
 def mirar_multimedia(titulo,vista,calif,firstime):#Función para updatear el porcentaje visto y la calificacion personal de esa multimedia
     if cnx.is_connected:
         cursor=cnx.cursor()
+        if vista == "" :
+            vista = 0
+        if calif=="": 
+            calif = 0       
         try:
             id_multimedia = con_idmultimedia(cursor, titulo)
             id_perfil = perfil_actual_id
-            if firstime: #Si es la primera ocasion qie mira esa multimedia se hara un insert
+            if firstime: #Si es la primera ocasion que mira esa multimedia se hara un insert
                 ins_mirar(cursor,id_multimedia,id_perfil,vista,calif)
                 cnx.commit()
             else:#Si por otro lado ya la habia visto se realizara un update
