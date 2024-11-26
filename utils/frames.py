@@ -201,31 +201,32 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
     listaBus.config(yscrollcommand=scrollbarList.set)
 
     # Sección "Continuar viendo"
-    Label(f,text="Continuar viendo",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).grid(row=3, column=0, columnspan=2, pady=5)
+    if len(listaContinuar) != 0:
+        Label(f,text="Continuar viendo",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).grid(row=3, column=0, columnspan=2, pady=5)
 
-    frame_continuar = Frame(f, bg="#FFFFFF", width=450, height=70)
-    frame_continuar.grid(row=4, column=0, columnspan=2, pady=2)
-    
-    canvas_continuar = Canvas(frame_continuar, bg="#FFFFFF", width=450, height=120, highlightthickness=0)
-    scrollbar_continuar = Scrollbar(frame_continuar, orient="horizontal", command=canvas_continuar.xview)
-    content_continuar = Frame(canvas_continuar, bg="#FFFFFF")
+        frame_continuar = Frame(f, bg="#FFFFFF", width=450, height=70)
+        frame_continuar.grid(row=4, column=0, columnspan=2, pady=2)
+        
+        canvas_continuar = Canvas(frame_continuar, bg="#FFFFFF", width=450, height=120, highlightthickness=0)
+        scrollbar_continuar = Scrollbar(frame_continuar, orient="horizontal", command=canvas_continuar.xview)
+        content_continuar = Frame(canvas_continuar, bg="#FFFFFF")
 
-    canvas_continuar.configure(xscrollcommand=scrollbar_continuar.set)
-    canvas_continuar.pack(side="top", fill="both", expand=True)
-    scrollbar_continuar.pack(side="bottom", fill="x")
+        canvas_continuar.configure(xscrollcommand=scrollbar_continuar.set)
+        canvas_continuar.pack(side="top", fill="both", expand=True)
+        scrollbar_continuar.pack(side="bottom", fill="x")
 
-    canvas_continuar.create_window((0, 0), window=content_continuar, anchor="nw")
-    #Se muestran todos los titulos que hay para continuar viendo e invoca, si se presionan los botones,
-    #el frame para mostrar la informacion del programa
-    for elem in listaContinuar:
-        item_frame = Frame(content_continuar, bg="#FFFFFF")
-        item_frame.pack(side="left", padx=10, pady=5)
+        canvas_continuar.create_window((0, 0), window=content_continuar, anchor="nw")
+        #Se muestran todos los titulos que hay para continuar viendo e invoca, si se presionan los botones,
+        #el frame para mostrar la informacion del programa
+        for elem in listaContinuar:
+            item_frame = Frame(content_continuar, bg="#FFFFFF")
+            item_frame.pack(side="left", padx=10, pady=5)
 
-        Label(item_frame, text=f"Titulo: {elem[1]}, Visto: {elem[2]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10), wraplength=200, justify="left").pack()
-        Button(item_frame, text="Mirar", command=lambda t=elem[1]: vermultimedia(t), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15, height=1).pack(pady=5)
+            Label(item_frame, text=f"Titulo: {elem[1]}, Visto: {elem[2]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10), wraplength=200, justify="left").pack()
+            Button(item_frame, text="Mirar", command=lambda t=elem[1]: vermultimedia(t), bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15, height=1).pack(pady=5)
 
-    content_continuar.update_idletasks()
-    canvas_continuar.configure(scrollregion=canvas_continuar.bbox("all"))
+        content_continuar.update_idletasks()
+        canvas_continuar.configure(scrollregion=canvas_continuar.bbox("all"))
 
     # Sección "Novedades"
     Label(f,text="Novedades",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).grid(row=5, column=0, columnspan=2, pady=5)
