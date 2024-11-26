@@ -67,7 +67,6 @@ def verificacion(nuevoUsuario,nuevoContra):
 
 #PARA UPDATEAR CONTRASEÑA
 def cambiarcontra(usuario):#Función la cual llama el boton para cambiar la contraseña, este cambia al frame_nuevacontra
-    print(usuario)
     frame=frame_nuevacontra(root,usuario,nuevacontra)
     mostrar_frame(frame)
 

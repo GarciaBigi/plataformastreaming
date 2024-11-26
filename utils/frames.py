@@ -159,7 +159,7 @@ def frame_nuevacontra(root, usuario, nuevacontra):
 
 ####FRAME QUE MUESTRA EL CONTINUAR VIENDO, NOVEDADES Y BARRA DE BUSQUEDA DE LOS PERFILES######################################
 def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "", vermultimedia=None):
-    root.geometry("450x700")
+    root.geometry("450x650")
     f = Frame(root, bg="#FFFFFF", width=450, height=600)
     f.grid_propagate(False)
 
@@ -204,10 +204,10 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
     # Sección "Continuar viendo"
     Label(f,text="Continuar viendo",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).grid(row=3, column=0, columnspan=2, pady=5)
 
-    frame_continuar = Frame(f, bg="#FFFFFF", width=450, height=100)
-    frame_continuar.grid(row=4, column=0, columnspan=2, pady=5)
+    frame_continuar = Frame(f, bg="#FFFFFF", width=450, height=70)
+    frame_continuar.grid(row=4, column=0, columnspan=2, pady=2)
     
-    canvas_continuar = Canvas(frame_continuar, bg="#FFFFFF", width=450, height=150, highlightthickness=0)
+    canvas_continuar = Canvas(frame_continuar, bg="#FFFFFF", width=450, height=120, highlightthickness=0)
     scrollbar_continuar = Scrollbar(frame_continuar, orient="horizontal", command=canvas_continuar.xview)
     content_continuar = Frame(canvas_continuar, bg="#FFFFFF")
 
@@ -230,10 +230,10 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
     # Sección "Novedades"
     Label(f,text="Novedades",bg="#FFFFFF",fg="#000000",font=("Arial", 12, "bold"),wraplength=400,justify="center",).grid(row=5, column=0, columnspan=2, pady=5)
 
-    frame_novedades = Frame(f, bg="#FFFFFF", width=450, height=100)
-    frame_novedades.grid(row=6, column=0, columnspan=2, pady=5)
+    frame_novedades = Frame(f, bg="#FFFFFF", width=450, height=70)
+    frame_novedades.grid(row=6, column=0, columnspan=2, pady=2)
 
-    canvas_novedades = Canvas(frame_novedades, bg="#FFFFFF", width=450, height=150, highlightthickness=0)
+    canvas_novedades = Canvas(frame_novedades, bg="#FFFFFF", width=450, height=120, highlightthickness=0)
     scrollbar_novedades = Scrollbar(frame_novedades, orient="horizontal", command=canvas_novedades.xview)
     content_novedades = Frame(canvas_novedades, bg="#FFFFFF")
 
