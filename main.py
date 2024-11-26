@@ -88,22 +88,22 @@ def obtener_perfiles(idUsuario):
     if cnx.is_connected:
         cursor=cnx.cursor()
         try:
-            listaPerfiles = con_perfiles(cursor, idUsuario)
+            listaPerfiles = con_perfiles(cursor, idUsuario)#Se obtiene una lista con todos los perfiles asociados al id del usuario
             return listaPerfiles
         except mysql.connector.Error as err:
             cnx.rollback()
             print(f"Error: {err}")
         finally:
             cursor.close()
-
+#CREAR PERFIL
 def crearPerfil(nombre,tipo,id,servicio):
     if cnx.is_connected:
         cursor = cnx.cursor()
         try:
-            insert_perfil(cursor, nombre, tipo, id)
+            insert_perfil(cursor, nombre, tipo, id)#Se agrega el nuevo perfil asociado al id del usuario
             cnx.commit()
-            listaPer = obtener_perfiles(id)
-            frame = frame_perfiles(root, listaPer, servicio, crearPerfil= crearPerfil)
+            listaPer = obtener_perfiles(id)#Se obtiene la nueva lista de perfiles
+            frame = frame_perfiles(root, listaPer, servicio, crearPerfil= crearPerfil)#Se vuelve a cargar el frame con el nuevo perfil
             mostrar_frame(frame)
         except mysql.connector.Error as err:
             cnx.rollback()
@@ -119,9 +119,9 @@ def servicio(perfil):
             set_perfil_actual(perfil[1]) #Seteo el perfil actual de manera global
             listaContinuar = continuar_viendo(cursor, perfil[1])#Se consulta sobre los continuar viendo y novedades relacionadas a ese perfil
             if perfil[2] == True:
-                listaNovedades = novedadesFil(cursor,perfil[2])
+                listaNovedades = novedadesFil(cursor,perfil[2])#Si el perfil es infantil mostrara novedades que sean atp
             else:
-                listaNovedades = novedades(cursor)
+                listaNovedades = novedades(cursor)#Si no es infantil muestra todas las novedades
             frame=frame_plataforma(root, listaContinuar,listaNovedades, perfil[2], busq=busq, vermultimedia=vermultimedia)#Se crea el frame de acurdo a los resultados de las consultas
             mostrar_frame(frame)
         except mysql.connector.Error as err:
@@ -129,15 +129,15 @@ def servicio(perfil):
             print(f"Error: {err}")
         finally:
             cursor.close()
-
+#BUSQUEDA DE UN TITULO
 def busq(texto, TipoPer):
     if cnx.is_connected:
         cursor=cnx.cursor()
         try:
             if TipoPer == False:
-                listaBusqueda = buscarTitulo(cursor, texto)
+                listaBusqueda = buscarTitulo(cursor, texto)#Si el tipo de perfil es adulto realiza una busqueda sin filtros de edad
             else:
-                listaBusqueda = buscarTituloFil(cursor, texto, TipoPer)
+                listaBusqueda = buscarTituloFil(cursor, texto, TipoPer)#Si es infantil realiza una busqueda filtrada
             return listaBusqueda
         except mysql.connector.Error as err:
             cnx.rollback()
@@ -200,13 +200,13 @@ def ir_cambiar_usuario(): #Funcion para cambiar el usuario/cerrar sesión
     frame = frame_ingreso(root, autenticacion)
     mostrar_frame(frame)
 
-def ir_elegir_perfil():#Funcion para ir a eleguir perfiles
+def ir_elegir_perfil():#Funcion para ir a elegir perfiles
     global usuario_actual_id
     if usuario_actual_id is not None:
         try:
             cursor = cnx.cursor()
-            listaPer = obtener_perfiles(usuario_actual_id)
-            frame = frame_perfiles(root, listaPer, servicio)
+            listaPer = obtener_perfiles(usuario_actual_id)#obtiene todos los perfiles asociados al id del usuario
+            frame = frame_perfiles(root, listaPer, servicio)#invoca el frame para mostrar los perfiles
             mostrar_frame(frame)
         except mysql.connector.Error as err:
             cnx.rollback()

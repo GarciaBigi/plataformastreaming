@@ -47,7 +47,7 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
     
-    # Etiqueta inicial
+    # Etiqueta bienvenida
     Label(f, text="Bienvenido, seleccione un perfil.", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=20)
 
     # Contenedor para los perfiles
@@ -58,7 +58,7 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
     canvas.create_window(0, 0, anchor="nw", window=profiles_frame)
     canvas.configure(yscrollcommand=scrollbar.set)
 
-    # Colocamos el canvas
+    # Canvas
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
 
@@ -97,7 +97,7 @@ def frame_perfiles(root, listaPer, servicio, *, crearPerfil=None):
         Label(profiles_frame, text=f"{perfil[0]}", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=i, column=0, padx=10, pady=5, sticky="w")
         Button(profiles_frame,text="Ingresar",command=lambda p=perfil: servicio(p),bg="#4CAF50",fg="#FFFFFF",font=("Arial", 10),relief="flat",width=10,).grid(row=i, column=1, padx=10, pady=5)
 
-       # Si hay menos de 7 perfiles, mostrar el botón "Nuevo Perfil"
+       # Si hay menos de 6 perfiles, mostrar el botón "Nuevo Perfil"
     if len(listaPer) < 7:
         Button(profiles_frame,text="Nuevo Perfil",command=lambda id=listaPer[0][3]: nuevoPer(id),bg="#FFFFFF",fg="#000000",font=("Arial", 10),).grid(row=len(listaPer), column=0, columnspan=2, pady=10)
     # Actualizar el canvas
@@ -113,13 +113,13 @@ def frame_nuevacuenta(root, verificar):
     root.geometry("450x450")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
-    
+    #Titulo
     Label(f, text="Creación de una nueva cuenta",bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").grid(row=0, column=0, columnspan=2, pady=20, padx=10)
-    
+    #Se ingresa el correo electronico
     Label(f, text="Ingrese nuevo correo:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=1, column=0, pady=10, sticky="e")
     nuevoUsuario = Entry(f, width=30, bg="#F7F7F7", bd=1, relief="solid")
     nuevoUsuario.grid(row=1, column=1, pady=10, padx=10)
-    
+    #Se ingresa la contraseña
     Label(f, text="Ingrese nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=2, column=0, pady=10, sticky="e")
     nuevaContra1 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
     nuevaContra1.grid(row=2, column=1, pady=10, padx=10)
@@ -127,7 +127,7 @@ def frame_nuevacuenta(root, verificar):
     Label(f, text="Repita nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=3, column=0, pady=10, sticky="e")
     nuevaContra2 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
     nuevaContra2.grid(row=3, column=1, pady=10, padx=10)
-    
+    #Se invoca la funcion para crear la nueva cuenta
     Button(f, text="Crear Cuenta", command=lambda: verificar(nuevoUsuario.get(), nuevaContra1.get()),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"), relief="flat", width=15).grid(row=4, column=0, columnspan=2, pady=20)
     
     return f
@@ -142,7 +142,7 @@ def frame_nuevacontra(root, usuario, nuevacontra):
     Label(f, text=f"Bienvenido: {usuario}",bg="#FFFFFF", fg="#000000", font=("Arial", 14, "bold"),wraplength=400, justify="center").grid(row=0, column=0, columnspan=2, pady=20, padx=10)
     Label(f, text="Por favor, ingrese su nueva contraseña.",bg="#FFFFFF", fg="#555555", font=("Arial", 11),wraplength=400, justify="center").grid(row=1, column=0, columnspan=2, pady=10, padx=10)
 
-
+    #Se ingresa la nueva contraseña
     Label(f, text="Nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=2, column=0, pady=10, sticky="e", padx=10)
     nuevaContra1 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
     nuevaContra1.grid(row=2, column=1, pady=10, padx=10)
@@ -150,7 +150,7 @@ def frame_nuevacontra(root, usuario, nuevacontra):
     Label(f, text="Repita nueva contraseña:", bg="#FFFFFF", fg="#000000", font=("Arial", 10)).grid(row=3, column=0, pady=10, sticky="e", padx=10)
     nuevaContra2 = Entry(f, show="*", width=30, bg="#F7F7F7", bd=1, relief="solid")
     nuevaContra2.grid(row=3, column=1, pady=10, padx=10)
-
+    #Se invoca la funcion para cambiar la contraseña
     Button(f, text="Confirmar", command=lambda: nuevacontra(usuario,nuevaContra1.get(),),bg="#4CAF50", fg="#FFFFFF", font=("Arial", 10, "bold"),relief="flat", width=15, height=1).grid(row=4, column=0, columnspan=2, pady=20)
 
     return f
@@ -172,21 +172,20 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
         if seleccion:
             indice = seleccion[0]
             valor = listaBus.get(indice)
-            vermultimedia(valor)
-
+            vermultimedia(valor)#Se invoca el frame para ver toda la informacion del programa
 
     def obtener_resultados(texto, TipoPer):
         listaBus.delete(0,END)
-        resultados = busq(texto, TipoPer)
+        resultados = busq(texto, TipoPer)#Se invoca la busqueda del titulo
         for elem in resultados:
-            listaBus.insert(END, elem[1])
-        listaBus.bind('<<ListboxSelect>>', callback)
+            listaBus.insert(END, elem[1])#Se insertan todos los titulos encontrados que se asemejan
+        listaBus.bind('<<ListboxSelect>>', callback)#Es para obtener el titulo seleccionado de la lista
         listaBus.config(height=min(len(resultados), 10))
         
-
+    #Aca se pone el titulo a busca
     busqueda = Entry(f, width=40, bg="#F7F7F7", bd=1, relief="solid")
     busqueda.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-
+    #Esto invoca la funcion que va a buscar todos los titulos
     botonBuscar = Button(f, text= "Buscar", command= lambda: obtener_resultados(busqueda.get(), TipoPer), bg="#2A2D43", fg= "#000000" ,font=("Arial", 10),relief="flat", width=8)
     botonBuscar.grid(row=1, column=1, padx=5, pady=10, sticky="e")
 
@@ -216,7 +215,8 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
     scrollbar_continuar.pack(side="bottom", fill="x")
 
     canvas_continuar.create_window((0, 0), window=content_continuar, anchor="nw")
-
+    #Se muestran todos los titulos que hay para continuar viendo e invoca, si se presionan los botones,
+    #el frame para mostrar la informacion del programa
     for elem in listaContinuar:
         item_frame = Frame(content_continuar, bg="#FFFFFF")
         item_frame.pack(side="left", padx=10, pady=5)
@@ -242,7 +242,7 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
     scrollbar_novedades.pack(side="bottom", fill="x")
 
     canvas_novedades.create_window((0, 0), window=content_novedades, anchor="nw")
-
+    #Muestra todos los titulos nuevos y, si se presiona el boton, se invoca el frame para ver toda la info del programa
     for elem in listaNovedades:
         item_frame = Frame(content_novedades, bg="#FFFFFF")
         item_frame.pack(side="left", padx=10, pady=5)
