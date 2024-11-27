@@ -168,7 +168,6 @@ def vermultimedia(titulo):#Esta función busca el resumen de datos sobre una mul
                 listaNovedades = novedadesFil(cnx.cursor(), InfoPer[0][2]) if InfoPer[0][2] == True else novedades(cnx.cursor())
                 frame = frame_plataforma(root, listaContinuar, listaNovedades, perfil, busq=busq, vermultimedia=vermultimedia)
                 mostrar_frame(frame)
-            
             frame=frame_multimedia(root,visto=visto,calificacion=calif,mirarmultimedia=mirar_multimedia,multimedia=multimedia,equipo=equipo, volver_a_plataforma=volver)
             mostrar_frame(frame)
         except mysql.connector.Error as err:
@@ -180,10 +179,20 @@ def vermultimedia(titulo):#Esta función busca el resumen de datos sobre una mul
 def mirar_multimedia(titulo,vista,calif,firstime):#Función para updatear el porcentaje visto y la calificacion personal de esa multimedia
     if cnx.is_connected:
         cursor=cnx.cursor()
-        if vista == "" :
+        try:#Corroboracion que los datos ingresados no son cualquier cosa
+            vista = float(vista) if vista != "" else 0
+            calif = float(calif) if calif != "" else 0
+            if vista > 100:
+                vista = 100
+            elif vista < 0:
+                vista = 0
+            if calif > 5:
+                calif = 5
+            elif calif < 0:
+                calif = 0
+        except ValueError:
             vista = 0
-        if calif=="": 
-            calif = 0       
+            calif = 0
         try:
             id_multimedia = con_idmultimedia(cursor, titulo)
             id_perfil = perfil_actual_id
