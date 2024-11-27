@@ -254,8 +254,7 @@ def frame_plataforma(root, listaContinuar, listaNovedades, TipoPer, *,busq = "",
 ####FRAME QUE MUESTRA EL CONTINUAR VIENDO, NOVEDADES Y BARRA DE BUSQUEDA DE LOS PERFILES######################################
 
 ####FRAME QUE MUESTRA LOS DATOS ESPECIFICOS DE LA MULTIMEDIA SELECCIONADA Y SU EQUIPO DE PRODUCCIÓN###########################
-def frame_multimedia(root, *, visto="" ,calificacion="" ,mirarmultimedia=None, multimedia=[], equipo=[]):
-    # servicio = None, idPer = None):
+def frame_multimedia(root, *, visto="" ,calificacion="" ,mirarmultimedia=None, multimedia=[], equipo=[], volver_a_plataforma=None):
     root.geometry("450x700")
     f = Frame(root, bg="#FFFFFF", width=450, height=450)
     f.grid_propagate(False)
@@ -263,7 +262,7 @@ def frame_multimedia(root, *, visto="" ,calificacion="" ,mirarmultimedia=None, m
     # MULTIMEDIA
     titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion = multimedia
 
-    #Button(f, text="Volver atras",command= lambda : servicio(idPer), bg="#2A2D43", fg= "#000000" ,font=("Arial", 10),relief="flat", width=8).pack(pady = 5)
+    Button(f, text="Volver atrás", command=volver_a_plataforma, bg="#2A2D43", fg="#FFFFFF", font=("Arial", 10), relief="flat", width=12).pack(pady=5)
     # Título principal
     Label(f, text="Información de Multimedia", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
 

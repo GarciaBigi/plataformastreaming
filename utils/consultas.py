@@ -38,6 +38,16 @@ def insert_perfil(cursor, nombre, tipo, id):
     """
     cursor.execute(insertarPerfil, (nombre, tipo, id))
 
+def con_perfil(cursor, idPer):
+    consultaPerfil = """
+    select p.id_perfil, p.nombre , p.tipo 
+    from perfiles p 
+    where p.id_perfil = %s
+    """
+    cursor.execute(consultaPerfil,(idPer,))
+    InfoPer = cursor.fetchall()
+    return InfoPer
+
 def insert_usuario(cursor,correo,contrasena):
     insertarUsuario= """
     Insert into usuarios(mail,contrasena)
