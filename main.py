@@ -166,7 +166,7 @@ def vermultimedia(titulo):#Esta función busca el resumen de datos sobre una mul
                 listaContinuar = continuar_viendo(cnx.cursor(), perfil)
                 InfoPer = con_perfil(cnx.cursor(),perfil)
                 listaNovedades = novedadesFil(cnx.cursor(), InfoPer[0][2]) if InfoPer[0][2] == True else novedades(cnx.cursor())
-                frame = frame_plataforma(root, listaContinuar, listaNovedades, perfil, busq=busq, vermultimedia=vermultimedia)
+                frame = frame_plataforma(root, listaContinuar, listaNovedades, InfoPer[0][2], busq=busq, vermultimedia=vermultimedia)
                 mostrar_frame(frame)
             frame=frame_multimedia(root,visto=visto,calificacion=calif,mirarmultimedia=mirar_multimedia,multimedia=multimedia,equipo=equipo, volver_a_plataforma=volver)
             mostrar_frame(frame)
@@ -204,7 +204,16 @@ def mirar_multimedia(titulo,vista,calif,firstime):#Función para updatear el por
                 cnx.commit()
             multimedia= con_multimediafull(cursor,id_multimedia) 
             equipo= con_equipo(cursor,id_multimedia)
-            frame=frame_multimedia(root,visto=vista,calificacion=calif,mirarmultimedia=mirar_multimedia,multimedia=multimedia,equipo=equipo)
+
+            def volver():
+                perfil = perfil_actual_id
+                listaContinuar = continuar_viendo(cnx.cursor(), perfil)
+                InfoPer = con_perfil(cnx.cursor(),perfil)
+                listaNovedades = novedadesFil(cnx.cursor(), InfoPer[0][2]) if InfoPer[0][2] == True else novedades(cnx.cursor())
+                frame = frame_plataforma(root, listaContinuar, listaNovedades, InfoPer[0][2], busq=busq, vermultimedia=vermultimedia)
+                mostrar_frame(frame)
+            
+            frame=frame_multimedia(root,visto=vista,calificacion=calif,mirarmultimedia=mirar_multimedia,multimedia=multimedia,equipo=equipo, volver_a_plataforma=volver)
             mostrar_frame(frame)
         except mysql.connector.Error as err:
             cnx.rollback()

@@ -262,9 +262,9 @@ def frame_multimedia(root, *, visto="" ,calificacion="" ,mirarmultimedia=None, m
     # MULTIMEDIA
     titulo, plot, valoracion, atp, genero, fecha_lanzamiento, duracion = multimedia
 
-    Button(f, text="Volver atrás", command=volver_a_plataforma, bg="#2A2D43", fg="#FFFFFF", font=("Arial", 10), relief="flat", width=12).pack(pady=5)
+    Button(f, text="Volver atrás", command=volver_a_plataforma, bg="#2A2D43", fg="#FFFFFF", font=("Arial", 10), relief="flat", width=12).pack(pady=1)
     # Título principal
-    Label(f, text="Información de Multimedia", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=10)
+    Label(f, text="Información de Multimedia", bg="#FFFFFF", fg="#000000", font=("Arial", 12, "bold"), wraplength=400, justify="center").pack(pady=5)
 
     # Información principal de la multimedia
     info_frame = Frame(f, bg="#F7F7F7", relief="solid", bd=1, padx=10, pady=10)
